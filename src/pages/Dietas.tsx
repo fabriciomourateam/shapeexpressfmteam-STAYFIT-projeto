@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Toggle } from '@/components/ui/toggle';
-import { Coffee, Utensils, Apple, Trophy } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Coffee, Utensils, Apple, Trophy, ChevronDown, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { PersonalizationModal } from '@/components/PersonalizationModal';
+import { SubstitutionAppModal } from '@/components/SubstitutionAppModal';
+import { useProfile } from '@/hooks/use-profile';
+import { useMealProgress } from '@/hooks/use-meal-progress';
+import { getRecommendedDietPlan, getFilteredDietPlans } from '@/lib/dietUtils';
 
 interface PlanoDetalhes {
   nome: string;
@@ -637,217 +644,268 @@ const obterPlanosPorGenero = (genero: 'masculino' | 'feminino') => {
 };
 
 export default function Dietas() {
+  const { profile, isPersonalized, refreshProfile } = useProfile();
+  const { alimentosMarcados, toggleAlimento, getProgressoRefeicao } = useMealProgress();
   const [planoSelecionado, setPlanoSelecionado] = useState('80kg');
   const [generoSelecionado, setGeneroSelecionado] = useState<'masculino' | 'feminino'>('masculino');
+  const [showPersonalizationModal, setShowPersonalizationModal] = useState(false);
+  const [showSubstitutionModal, setShowSubstitutionModal] = useState(false);
+  
+  // Estados para controlar refeições colapsáveis
+  const [refeicoesAbertas, setRefeicoesAbertas] = useState<Record<string, boolean>>({
+    refeicao01: false,
+    refeicao02: false,
+    refeicao03: false,
+    refeicao04: false,
+    refeicao05: false
+  });
 
-  // Nova lógica: filtra planos por gênero usando identificadores únicos
-  const planosDetalhados = obterPlanosPorGenero(generoSelecionado);
+  // Verificar se precisa mostrar o modal de personalização
+  useEffect(() => {
+    if (profile && !isPersonalized) {
+      setShowPersonalizationModal(true);
+    }
+  }, [profile, isPersonalized]);
+
+  // Lógica de planos baseada no perfil personalizado
+  const planosDetalhados = isPersonalized && profile?.sexo 
+    ? getFilteredDietPlans(profile)
+    : obterPlanosPorGenero(generoSelecionado);
+
+  // Selecionar plano recomendado automaticamente se personalizado
+  useEffect(() => {
+    if (isPersonalized && profile) {
+      const planoRecomendado = getRecommendedDietPlan(profile);
+      if (planoRecomendado) {
+        setPlanoSelecionado(planoRecomendado);
+      }
+    }
+  }, [isPersonalized, profile]);
+
   const plano = planosDetalhados[planoSelecionado];
+
+  // Verificação de segurança para evitar erro quando plano não existir
+  if (!plano) {
+    return (
+      <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-gray-300 mb-2">Carregando dieta personalizada...</h2>
+            <p className="text-gray-400">Preparando seu plano alimentar específico</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePersonalizationComplete = () => {
+    setShowPersonalizationModal(false);
+    refreshProfile();
+  };
+
+  // Função para alternar refeição aberta/fechada
+  const toggleRefeicao = (refeicao: string) => {
+    setRefeicoesAbertas(prev => ({
+      ...prev,
+      [refeicao]: !prev[refeicao]
+    }));
+  };
+
+  // Função para renderizar uma refeição colapsável
+  const renderRefeicao = (refeicaoKey: string, titulo: string, descricao: string, emoji: string, cor: string) => {
+    const cores = {
+      orange: {
+        card: 'from-orange-50 to-yellow-50 border-orange-200',
+        icon: 'from-orange-400 to-yellow-400',
+        dot: 'from-orange-400 to-yellow-400',
+        hover: 'hover:bg-orange-100/50',
+        checkbox: 'data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500',
+        text: 'text-orange-600'
+      },
+      pink: {
+        card: 'from-pink-50 to-rose-50 border-pink-200',
+        icon: 'from-pink-400 to-rose-400',
+        dot: 'from-pink-400 to-rose-400',
+        hover: 'hover:bg-pink-100/50',
+        checkbox: 'data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500',
+        text: 'text-pink-600'
+      },
+      green: {
+        card: 'from-green-50 to-emerald-50 border-green-200',
+        icon: 'from-green-400 to-emerald-400',
+        dot: 'from-green-400 to-emerald-400',
+        hover: 'hover:bg-green-100/50',
+        checkbox: 'data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500',
+        text: 'text-green-600'
+      },
+      purple: {
+        card: 'from-purple-50 to-violet-50 border-purple-200',
+        icon: 'from-purple-400 to-violet-400',
+        dot: 'from-purple-400 to-violet-400',
+        hover: 'hover:bg-purple-100/50',
+        checkbox: 'data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500',
+        text: 'text-purple-600'
+      },
+      blue: {
+        card: 'from-blue-50 to-cyan-50 border-blue-200',
+        icon: 'from-blue-400 to-cyan-400',
+        dot: 'from-blue-400 to-cyan-400',
+        hover: 'hover:bg-blue-100/50',
+        checkbox: 'data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500',
+        text: 'text-blue-600'
+      }
+    };
+
+    const corConfig = cores[cor as keyof typeof cores];
+    const alimentos = plano.refeicoes[refeicaoKey as keyof typeof plano.refeicoes] || [];
+    const progresso = getProgressoRefeicao(refeicaoKey, alimentos);
+
+    return (
+      <Card className={`bg-gradient-to-br ${corConfig.card} text-gray-900 hover:shadow-xl transition-all duration-300 relative overflow-hidden`}>
+        <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${corConfig.icon.replace('from-', 'from-').replace('to-', 'to-')}/30 rounded-full -translate-y-10 translate-x-10`}></div>
+        <Collapsible 
+          open={refeicoesAbertas[refeicaoKey]} 
+          onOpenChange={() => toggleRefeicao(refeicaoKey)}
+        >
+          <CollapsibleTrigger asChild>
+            <CardHeader className="pb-4 relative z-10 cursor-pointer hover:bg-orange-100/50 transition-colors rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-3">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${corConfig.icon} shadow-lg`}>
+                    <Coffee className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{emoji}</span>
+                      <span className="diet-title text-gray-800">{titulo}</span>
+                    </div>
+                    <p className="diet-description text-gray-600 mt-1">{descricao}</p>
+                  </div>
+                </CardTitle>
+                <div className="flex items-center gap-3">
+                  <div className={`flex items-center gap-2 text-sm ${corConfig.text}`}>
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>{progresso.marcados}/{progresso.total}</span>
+                  </div>
+                  {refeicoesAbertas[refeicaoKey] ? (
+                    <ChevronDown className={`w-5 h-5 ${corConfig.text}`} />
+                  ) : (
+                    <ChevronRight className={`w-5 h-5 ${corConfig.text}`} />
+                  )}
+                </div>
+              </div>
+            </CardHeader>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <CardContent className="space-y-3 relative z-10">
+              {alimentos.map((item, index) => {
+                const chave = `${refeicaoKey}-${item}`;
+                const isChecked = alimentosMarcados[chave] || false;
+                
+                return (
+                  <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id={`${refeicaoKey}-${index}`}
+                        checked={isChecked}
+                        onCheckedChange={() => toggleAlimento(refeicaoKey, item)}
+                        className={corConfig.checkbox}
+                      />
+                      <label 
+                        htmlFor={`${refeicaoKey}-${index}`}
+                        className="text-gray-800 diet-item font-medium leading-relaxed cursor-pointer flex-1"
+                      >
+                        {item}
+                      </label>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
       <div className="space-y-6">
         {/* Header com título centralizado e toggle de gênero */}
         <div className="text-center space-y-4 relative">
-          {/* Toggle de Gênero - Responsivo */}
-          <div className="absolute top-0 right-0 sm:right-0 max-sm:relative max-sm:flex max-sm:justify-center max-sm:mb-4">
-            <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 gap-1 max-sm:scale-90">
-              <Toggle
-                pressed={generoSelecionado === 'masculino'}
-                onPressedChange={() => setGeneroSelecionado('masculino')}
-                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'masculino'
-                  ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-              >
-                👨 Masculino
-              </Toggle>
-              <Toggle
-                pressed={generoSelecionado === 'feminino'}
-                onPressedChange={() => setGeneroSelecionado('feminino')}
-                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'feminino'
-                  ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-sm'
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-              >
-                👩 Feminino
-              </Toggle>
+          {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
+          {!isPersonalized && (
+            <div className="absolute top-0 right-0 sm:right-0 max-sm:relative max-sm:flex max-sm:justify-center max-sm:mb-4">
+              <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 gap-1 max-sm:scale-90">
+                <Toggle
+                  pressed={generoSelecionado === 'masculino'}
+                  onPressedChange={() => setGeneroSelecionado('masculino')}
+                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'masculino'
+                    ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    }`}
+                >
+                  👨 Masculino
+                </Toggle>
+                <Toggle
+                  pressed={generoSelecionado === 'feminino'}
+                  onPressedChange={() => setGeneroSelecionado('feminino')}
+                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'feminino'
+                    ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-sm'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    }`}
+                >
+                  👩 Feminino
+                </Toggle>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full font-bold">
             <Trophy className="w-5 h-5" />
-            Planos Alimentares Shape Express
+            {isPersonalized ? 'Seu Plano Alimentar Personalizado' : 'Planos Alimentares Shape Express'}
           </div>
           <p className="text-gray-300 max-w-2xl mx-auto diet-item">
-            Planos nutricionais personalizados para todos os pesos. Escolha o plano ideal para seus objetivos.
+            {!isPersonalized && 'Planos nutricionais personalizados para todos os pesos. Escolha o plano ideal para seus objetivos.'}
           </p>
         </div>
 
-        {/* Botões de Seleção */}
-        <div className="flex flex-wrap gap-3 justify-center">
-          {Object.entries(planosDetalhados).map(([key, plano]) => (
-            <Button
-              key={key}
-              variant={planoSelecionado === key ? "default" : "outline"}
-              onClick={() => setPlanoSelecionado(key)}
-              className={`${planoSelecionado === key
-                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 hover:opacity-90 text-white'
-                : 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50'
-                }`}
-            >
-              <Apple className="w-4 h-4" />
-              <span className="ml-2">{plano.nome}</span>
-            </Button>
-          ))}
-        </div>
+        {/* Botões de Seleção - Só aparecem se não estiver personalizado */}
+        {!isPersonalized && (
+          <div className="flex flex-wrap gap-3 justify-center">
+            {Object.entries(planosDetalhados).map(([key, plano]) => (
+              <Button
+                key={key}
+                variant={planoSelecionado === key ? "default" : "outline"}
+                onClick={() => setPlanoSelecionado(key)}
+                className={`${planoSelecionado === key
+                  ? 'bg-gradient-to-r from-yellow-400 to-orange-500 hover:opacity-90 text-white'
+                  : 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50'
+                  }`}
+              >
+                <Apple className="w-4 h-4" />
+                <span className="ml-2">{plano.nome}</span>
+              </Button>
+            ))}
+          </div>
+        )}
 
-        {/* Grid de Refeições Premium */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        {/* Refeições Colapsáveis */}
+        <div className="space-y-4">
           {/* Refeição 01 */}
-          <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200 text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-200/30 to-yellow-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-400 to-yellow-400 shadow-lg">
-                  <Coffee className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">☕</span>
-                    <span className="diet-title text-gray-800">Refeição 01</span>
-                  </div>
-                  <p className="diet-description text-gray-600 mt-1">Energia para começar o dia</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 relative z-10">
-              {plano.refeicoes.refeicao01.map((item, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full flex-shrink-0"></div>
-                    <p className="text-gray-800 diet-item font-medium leading-relaxed">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {renderRefeicao('refeicao01', 'Refeição 01 - Café da Manhã', 'Energia para começar o dia', '☕', 'orange')}
 
           {/* Refeição 02 */}
-          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-pink-200 text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-200/30 to-rose-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-pink-400 to-rose-400 shadow-lg">
-                  <Apple className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🍎</span>
-                    <span className="diet-title text-gray-800">Refeição 02</span>
-                  </div>
-                  <p className="diet-description text-gray-600 mt-1">Lanche da manhã</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 relative z-10">
-              {plano.refeicoes.refeicao02.map((item, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-pink-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex-shrink-0"></div>
-                    <p className="text-gray-800 diet-item font-medium leading-relaxed">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {renderRefeicao('refeicao02', 'Refeição 02 - Lanche da Manhã', 'Lanche da manhã', '🍎', 'pink')}
 
           {/* Refeição 03 */}
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-200/30 to-emerald-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-green-400 to-emerald-400 shadow-lg">
-                  <Utensils className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🍽️</span>
-                    <span className="diet-title text-gray-800">Refeição 03</span>
-                  </div>
-                  <p className="diet-description text-gray-600 mt-1">Refeição principal do dia</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 relative z-10">
-              {plano.refeicoes.refeicao03.map((item, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-green-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex-shrink-0"></div>
-                    <p className="text-gray-800 diet-item font-medium leading-relaxed">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {renderRefeicao('refeicao03', 'Refeição 03 - Almoço', 'Refeição principal do dia', '🍽️', 'green')}
 
           {/* Refeição 04 */}
-          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-200/30 to-violet-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-400 to-violet-400 shadow-lg">
-                  <Coffee className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🥤</span>
-                    <span className="diet-title text-gray-800">Refeição 04</span>
-                  </div>
-                  <p className="diet-description text-gray-600 mt-1">Lanche da tarde</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 relative z-10">
-              {plano.refeicoes.refeicao04.map((item, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-purple-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-violet-400 rounded-full flex-shrink-0"></div>
-                    <p className="text-gray-800 diet-item font-medium leading-relaxed">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {renderRefeicao('refeicao04', 'Refeição 04 - Lanche da Tarde', 'Lanche da tarde', '🥤', 'purple')}
 
           {/* Refeição 05 */}
-          <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200 text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-200/30 to-blue-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-400 to-blue-400 shadow-lg">
-                  <Utensils className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🌙</span>
-                    <span className="diet-title text-gray-800">Refeição 05</span>
-                  </div>
-                  <p className="diet-description text-gray-600 mt-1">Refeição noturna leve</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 relative z-10">
-              {plano.refeicoes.refeicao05.map((item, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-indigo-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full flex-shrink-0"></div>
-                    <p className="text-gray-800 diet-item font-medium leading-relaxed">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {renderRefeicao('refeicao05', 'Refeição 05 - Jantar', 'Refeição noturna leve', '🌙', 'blue')}
         </div>
 
         {/* Informações Adicionais */}
@@ -922,20 +980,31 @@ export default function Dietas() {
                   </div>
                 </div>
               </div>
-              <a
-                href="https://quantocomer.com.br/fabriciomoura/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-orange-400 to-red-500 hover:from-orange-500 hover:to-red-600 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg"
+              <Button
+                onClick={() => setShowSubstitutionModal(true)}
+                className="w-full bg-gradient-to-r from-orange-400 to-red-500 hover:from-orange-500 hover:to-red-600 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <Apple className="w-4 h-4 mr-2" />
                 Acessar App
                 <span className="ml-2 text-xs">↗</span>
-              </a>
+              </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Modal de Personalização */}
+      <PersonalizationModal
+        isOpen={showPersonalizationModal}
+        onClose={() => setShowPersonalizationModal(false)}
+        onComplete={handlePersonalizationComplete}
+      />
+
+      {/* Modal do App de Substituição */}
+      <SubstitutionAppModal
+        isOpen={showSubstitutionModal}
+        onClose={() => setShowSubstitutionModal(false)}
+      />
     </div>
   );
 }

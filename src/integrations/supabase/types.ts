@@ -219,28 +219,131 @@ export type Database = {
           },
         ]
       }
-      profiles: {
+      progresso_refeicoes_diario: {
+        Row: {
+          alimento: string
+          consumido: boolean
+          created_at: string
+          data: string
+          id: number
+          refeicao_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alimento: string
+          consumido?: boolean
+          created_at?: string
+          data: string
+          id?: number
+          refeicao_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alimento?: string
+          consumido?: boolean
+          created_at?: string
+          data?: string
+          id?: number
+          refeicao_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progresso_refeicoes_diario_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      progresso_exercicios_diario: {
         Row: {
           created_at: string
-          foto_url: string | null
-          nome: string
-          peso_atual: number | null
+          data: string
+          exercicio_index: number
+          exercicio_nome: string
+          id: string
+          realizado: boolean
+          treino_dia: number
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          foto_url?: string | null
-          nome: string
-          peso_atual?: number | null
+          data?: string
+          exercicio_index: number
+          exercicio_nome: string
+          id?: string
+          realizado?: boolean
+          treino_dia: number
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          data?: string
+          exercicio_index?: number
+          exercicio_nome?: string
+          id?: string
+          realizado?: boolean
+          treino_dia?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progresso_exercicios_diario_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          altura: number | null
+          created_at: string
+          foto_url: string | null
+          frequencia_treino: string | null
+          nome: string
+          perfil_personalizado: boolean
+          peso_atual: number | null
+          peso_inicial: number | null
+          sexo: string | null
+          treino_personalizado: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          altura?: number | null
+          created_at?: string
           foto_url?: string | null
-          nome?: string
+          frequencia_treino?: string | null
+          nome: string
+          perfil_personalizado?: boolean
           peso_atual?: number | null
+          peso_inicial?: number | null
+          sexo?: string | null
+          treino_personalizado?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          altura?: number | null
+          created_at?: string
+          foto_url?: string | null
+          frequencia_treino?: string | null
+          nome?: string
+          perfil_personalizado?: boolean
+          peso_atual?: number | null
+          peso_inicial?: number | null
+          sexo?: string | null
+          treino_personalizado?: boolean
           updated_at?: string
           user_id?: string
         }
