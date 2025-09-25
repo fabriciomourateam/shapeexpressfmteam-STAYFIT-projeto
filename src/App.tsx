@@ -11,6 +11,7 @@ import Dietas from "./pages/Dietas";
 import Treinos from "./pages/Treinos";
 import Perfil from "./pages/Perfil";
 import Login from "./pages/Login";
+import WelcomePage from "./pages/WelcomePage";
 import CelebrationPage from "./pages/CelebrationPage";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/welcome" element={<WelcomePage />} />
             <Route path="/" element={<Layout><DesafioDiario /></Layout>} />
             <Route path="/desafio-diario" element={<Layout><DesafioDiario /></Layout>} />
             <Route path="/celebration" element={<CelebrationPage />} />

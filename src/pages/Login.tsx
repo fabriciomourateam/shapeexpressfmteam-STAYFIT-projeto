@@ -21,7 +21,7 @@ export default function Login() {
 
   // Redirecionar se já estiver logado
   if (user && !loading) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/welcome" replace />;
   }
 
   const handleLogin = async (e: React.FormEvent) => {
