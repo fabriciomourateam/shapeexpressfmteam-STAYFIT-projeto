@@ -775,13 +775,7 @@ export default function Dietas() {
   // Verificação de segurança para evitar erro quando plano não existir ou ainda carregando
   if (!plano || isLoadingContent || (isPersonalized && !profile?.sexo)) {
     return (
-      <div 
-=======
-  // Verificação de segurança para evitar erro quando plano não existir ou ainda carregando
-  if (!plano || isLoadingContent || (isPersonalized && !profile?.sexo)) {
-    return (
-      <div 
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
+      <div
         className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
         style={{
           background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
