@@ -135,11 +135,6 @@ export default function Treinos() {
   if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
     return (
       <div 
-      
-  // Verificação de segurança para evitar erro quando treino não existir ou ainda carregando
-  if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
-    return (
-      <div 
         className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
         style={{
           background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
