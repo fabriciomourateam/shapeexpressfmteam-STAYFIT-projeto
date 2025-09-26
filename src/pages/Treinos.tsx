@@ -91,13 +91,6 @@ export default function Treinos() {
     );
   }
 
-  const handlePersonalizationComplete = () => {
-    setShowPersonalizationModal(false);
-    refreshProfile();
-  };
-
-
-
   // Função para obter ícone do tipo de treino
   const getTipoIcon = (tipo: string) => {
     switch (tipo) {
@@ -127,6 +120,11 @@ export default function Treinos() {
       { card: 'from-indigo-50 to-blue-50', border: 'border-indigo-200', accent: 'from-indigo-400 to-blue-400', dot: 'from-indigo-400 to-blue-400', item: 'border-indigo-100', emoji: '🎯' }
     ];
     return colors[(dia - 1) % colors.length];
+  };
+
+  const handlePersonalizationComplete = () => {
+    setShowPersonalizationModal(false);
+    refreshProfile();
   };
 
 
