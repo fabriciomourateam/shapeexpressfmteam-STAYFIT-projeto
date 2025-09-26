@@ -177,8 +177,8 @@ export function useChallengeStatus(): ChallengeStatus {
         const diffTime = now.getTime() - startDate.getTime();
         daysSinceStart = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         
-        // Challenge starts the day after registration
-        canCompleteTasks = daysSinceStart > 0;
+        // Challenge starts the day after registration, but allow same day for testing
+        canCompleteTasks = daysSinceStart >= 0;
         currentChallengeDay = Math.max(0, Math.min(daysSinceStart, 7));
       }
 

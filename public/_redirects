@@ -1,0 +1,5 @@
+# Netlify redirects para SPA
+/*    /index.html   200
+
+# Fallback para todas as rotas
+/index.html    /index.html   200

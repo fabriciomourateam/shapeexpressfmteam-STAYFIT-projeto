@@ -6,11 +6,14 @@ import {
   Trophy,
   UtensilsCrossed,
   Dumbbell,
+  MessageCircle,
   User,
   LogOut
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { PWAInstallBanner } from '@/components/PWAInstallBanner';
+import { usePWA } from '@/hooks/use-pwa';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +21,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { user, loading, signOut } = useAuth();
+  const { isInstallable, isInstalled, installApp } = usePWA();
 
   if (loading) {
     return (
@@ -34,8 +38,9 @@ export default function Layout({ children }: LayoutProps) {
   const navigationItems = [
     { to: '/', icon: Calendar, label: 'Desafio' },
     { to: '/ranking', icon: Trophy, label: 'Ranking' },
-    { to: '/dietas', icon: UtensilsCrossed, label: 'Dietas' },
-    { to: '/treinos', icon: Dumbbell, label: 'Treinos' },
+    { to: '/dietas', icon: UtensilsCrossed, label: 'Dieta' },
+    { to: '/treinos', icon: Dumbbell, label: 'Treino' },
+    { to: '/suporte', icon: MessageCircle, label: 'Suporte' },
     { to: '/perfil', icon: User, label: 'Perfil' },
   ];
 
@@ -45,6 +50,7 @@ export default function Layout({ children }: LayoutProps) {
       'bg-gradient-to-br from-blue-400 to-blue-600',     // Ranking
       'bg-gradient-to-br from-green-400 to-green-600',   // Dietas
       'bg-gradient-to-br from-purple-400 to-purple-600', // Treinos
+      'bg-gradient-to-br from-orange-400 to-red-500',   // Suporte
       'bg-gradient-to-br from-gray-400 to-gray-600',     // Perfil
     ];
     return colors[index] || colors[0];
@@ -56,13 +62,41 @@ export default function Layout({ children }: LayoutProps) {
       'bg-gradient-to-br from-blue-400 to-blue-600',     // Ranking
       'bg-gradient-to-br from-green-400 to-green-600',   // Dietas
       'bg-gradient-to-br from-purple-400 to-purple-600', // Treinos
+      'bg-gradient-to-br from-orange-400 to-red-500',   // Suporte
       'bg-gradient-to-br from-gray-400 to-gray-600',     // Perfil
     ];
     return colors[index] || colors[0];
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div 
+      className="min-h-screen relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10">
       {/* Sidebar Navigation - Desktop */}
       <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-80 bg-gray-800 border-r border-gray-700 overflow-y-auto">
         <div className="p-6">
@@ -138,14 +172,27 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={signOut}
-              className="text-gray-400 hover:text-white"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+                <div className="flex items-center gap-2">
+                  {/* Botão de teste PWA - remover depois */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={installApp}
+                    className="text-yellow-400 hover:text-yellow-300 text-xs"
+                    disabled={!isInstallable}
+                  >
+                    📱 {isInstallable ? 'Instalar App' : isInstalled ? 'Já Instalado' : 'Não Disponível'}
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={signOut}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
           </div>
         </div>
       </header>
@@ -186,18 +233,22 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </nav>
 
-      {/* Estilos adicionais */}
-      <style>{`
-        .safe-area-pb {
-          padding-bottom: env(safe-area-inset-bottom);
-        }
-        
-        @media (max-width: 1023px) {
-          body {
-            padding-bottom: 0;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
+          {/* Estilos adicionais */}
+          <style>{`
+            .safe-area-pb {
+              padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            @media (max-width: 1023px) {
+              body {
+                padding-bottom: 0;
+              }
+            }
+          `}</style>
+          </div>
+          
+          {/* Banner de instalação PWA - Temporariamente desabilitado */}
+          <PWAInstallBanner />
+        </div>
+      );
+    }

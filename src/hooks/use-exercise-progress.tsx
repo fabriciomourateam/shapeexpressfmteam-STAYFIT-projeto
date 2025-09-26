@@ -39,6 +39,10 @@ export function useExerciseProgress() {
       setProgresso(data || []);
     } catch (err) {
       console.error('Erro ao buscar progresso dos exercícios:', err);
+      console.error('Dados da query fetch:', {
+        user_id: user?.id,
+        data: new Date().toISOString().split('T')[0]
+      });
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setLoading(false);
@@ -65,7 +69,7 @@ export function useExerciseProgress() {
         .eq('treino_dia', treinoDia)
         .eq('exercicio_nome', exercicioNome)
         .eq('exercicio_index', exercicioIndex)
-        .single();
+        .maybeSingle();
 
       if (existingData) {
         // Atualizar registro existente
@@ -108,6 +112,13 @@ export function useExerciseProgress() {
       }
     } catch (err) {
       console.error('Erro ao atualizar progresso do exercício:', err);
+      console.error('Dados da query:', {
+        user_id: user?.id,
+        data: new Date().toISOString().split('T')[0],
+        treino_dia: treinoDia,
+        exercicio_nome: exercicioNome,
+        exercicio_index: exercicioIndex
+      });
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     }
   }, [user]);

@@ -1,0 +1,25 @@
+[33mf912969[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mStay-FIT[m[33m)[m feat: Implementar sistema completo de personalização de treinos e dietas
+[33m2110420[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m feat: implementar melhorias na página de treinos - adicionar card de cardios, reorganizar layout dos cards informativos, implementar modal de vídeo para exercícios, ajustar descrições dos grupos musculares
+[33m0606228[m TREINOS FINALIZADOS
+[33mcfcb0f7[m Versão 15 - Versão final
+[33mdbf7716[m Versão 14 - Tudo pronto, vou só tirar os problemas de desempenho
+[33me41db84[m Versão 13 - Página de celebração concluída, falta arrumar segundo card em perfil e o botão de compartilhar em celebração
+[33m104eedc[m Versão 12- Dietas atualizadas
+[33m8a7505b[m Versão 11- Dietas atualizadas e dashboard corrigido no mobile
+[33m2c42469[m Versão 11 - Dietas atualizadas e Dashboard arrumado
+[33m10662b7[m Versão 11 - Dashboard de evolução no desafio
+[33m664abdb[m Versão 10 - Treino e dieta feminino atualizados pelo Guido
+[33m38fa756[m Versão 9 - Adicionei Toggle Masculino e Feminino
+[33m40512a4[m Versão 8 - ajuste de fonte e repetições
+[33m9f61fe9[m Versão 7 - Alteração dos treinos
+[33m9cd6bb3[m Versão 6 - Erro do ranking/data de inicio corrigido
+[33m289002c[m Versão 5 - Fabricio
+[33m5fcc3dd[m Versao 4 - ainda falta treinos
+[33m719983d[m Versao 3, ainda falta os treinos, mas adicionei pedidos do Fabricio
+[33m8847c95[m Versao 2, falta apenas atualizar os treinos
+[33m634edd4[m Versao 1
+[33m395769e[m falta apenas datas do desafio
+[33me791246[m Reverted to commit 215e0b7f2bb3318ba96a4b4e6f5906967d17dd78
+[33m320b887[m Fix: Sidebar overlap issue
+[33ma7c4169[m feat: Atualiza desafios e design
+[33ma2253eb[m falta apenas perfil

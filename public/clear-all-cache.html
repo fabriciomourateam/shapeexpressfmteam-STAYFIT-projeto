@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Limpar Cache PWA</title>
+</head>
+<body>
+    <h1>Limpar Cache PWA</h1>
+    <button onclick="clearAllCache()">Limpar Tudo</button>
+    <script>
+        async function clearAllCache() {
+            // Limpar service workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+            }
+            
+            // Limpar cache
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                for (let cacheName of cacheNames) {
+                    await caches.delete(cacheName);
+                }
+            }
+            
+            // Limpar storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            alert('Cache limpo! Recarregue a página.');
+        }
+    </script>
+</body>
+</html>

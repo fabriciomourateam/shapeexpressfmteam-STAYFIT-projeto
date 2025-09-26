@@ -253,8 +253,34 @@ export default function Perfil() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pb-24 lg:pb-0" style={{ backgroundColor: '#0B111F' }}>
-        <div className="flex flex-col items-center gap-4">
+      <div 
+        className="min-h-screen flex items-center justify-center pb-24 lg:pb-0 relative"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        {/* Padrão mais sutil de pontos */}
+        <div 
+          className="absolute inset-0 opacity-15" 
+          style={{
+            backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+            backgroundSize: '8px 8px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
           <p className="text-zinc-400">Carregando perfil...</p>
         </div>
@@ -265,8 +291,34 @@ export default function Perfil() {
   // Error state with retry option
   if (error && !profile.nome) {
     return (
-      <div className="min-h-screen flex items-center justify-center pb-24 lg:pb-0" style={{ backgroundColor: '#0B111F' }}>
-        <div className="flex flex-col items-center gap-4 max-w-md text-center">
+      <div 
+        className="min-h-screen flex items-center justify-center pb-24 lg:pb-0 relative"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        {/* Padrão mais sutil de pontos */}
+        <div 
+          className="absolute inset-0 opacity-15" 
+          style={{
+            backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+            backgroundSize: '8px 8px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 flex flex-col items-center gap-4 max-w-md text-center">
           <AlertCircle className="w-12 h-12 text-red-500" />
           <h2 className="text-xl font-semibold text-zinc-100">
             Erro ao carregar perfil
@@ -285,8 +337,34 @@ export default function Perfil() {
   }
 
   return (
-    <div className="min-h-screen py-6 px-4 pb-24 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-      <div className="space-y-6">
+    <div 
+      className="min-h-screen py-6 px-4 pb-24 lg:pb-6 relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10 space-y-6">
         {/* Header Premium com Título Dourado */}
         <div className="text-center space-y-4">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full font-bold">

@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/use-auth';
-import { User, Dumbbell, Calendar } from 'lucide-react';
+import { User, Dumbbell, Calendar, Target, Heart, Clock, Trophy } from 'lucide-react';
 
 interface TrainingPersonalizationModalProps {
   isOpen: boolean;
@@ -19,8 +21,15 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   
+  // Campos principais (obrigatórios)
   const [sexo, setSexo] = useState<'masculino' | 'feminino' | ''>('');
   const [frequenciaTreino, setFrequenciaTreino] = useState<string>('');
+  
+  // Campos adicionais (opcionais)
+  const [objetivo, setObjetivo] = useState('');
+  const [cardiosSemana, setCardiosSemana] = useState('');
+  const [nivel, setNivel] = useState('');
+  const [tempoTreino, setTempoTreino] = useState('');
 
   const frequenciasTreino = [
     { value: '1-3', label: '1 a 3 vezes por semana', description: 'Treino moderado' },
@@ -57,10 +66,14 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
     setLoading(true);
 
     try {
-      console.log('Dados de treino a serem salvos:', {
+      // Log de todos os dados coletados (não salvos no banco)
+      console.log('Dados de personalização de treino coletados:', {
         sexo: sexo,
-        frequencia_treino: frequenciaTreino,
-        treino_personalizado: true,
+        frequenciaTreino: frequenciaTreino,
+        objetivo: objetivo,
+        cardiosSemana: cardiosSemana,
+        nivel: nivel,
+        tempoTreino: tempoTreino,
         user_id: user.id
       });
 
@@ -104,7 +117,7 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
 
       toast({
         title: "Treinos personalizados! 💪",
-        description: "Agora você terá acesso a treinos específicos para você.",
+        description: "Obrigado pelas informações! Seus treinos foram personalizados com base nos seus dados.",
       });
 
       onComplete();
@@ -130,12 +143,12 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
           </div>
           <CardTitle className="text-2xl text-gray-900">Personalize seus treinos</CardTitle>
           <CardDescription className="text-gray-600">
-            Para oferecer treinos específicos pra você, precisamos saber alguns dados.
+            Para criar um plano de treino específico para você, precisamos conhecer melhor seu perfil e objetivos.
           </CardDescription>
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Sexo */}
             <div className="space-y-3">
               <Label className="flex items-center gap-2 text-gray-700">
@@ -179,16 +192,92 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
               </RadioGroup>
             </div>
 
+            {/* Objetivo Principal */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-gray-700">
+                <Target className="w-4 h-4" />
+                Qual seu objetivo principal?
+              </Label>
+              <Select value={objetivo} onValueChange={setObjetivo}>
+                <SelectTrigger className="text-gray-900">
+                  <SelectValue placeholder="Selecione seu objetivo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="emagrecimento">Emagrecimento</SelectItem>
+                  <SelectItem value="hipertrofia">Hipertrofia</SelectItem>
+                  <SelectItem value="forca">Ganho de Força</SelectItem>
+                  <SelectItem value="resistencia">Resistência</SelectItem>
+                  <SelectItem value="definicao">Definição</SelectItem>
+                  <SelectItem value="saude">Melhora de Saúde</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Cardios por Semana */}
+            <div className="space-y-2">
+              <Label htmlFor="cardios" className="flex items-center gap-2 text-gray-700">
+                <Heart className="w-4 h-4" />
+                Quantos cardios faz por semana?
+              </Label>
+              <Input
+                id="cardios"
+                type="number"
+                min="0"
+                max="7"
+                value={cardiosSemana}
+                onChange={(e) => setCardiosSemana(e.target.value)}
+                placeholder="Ex: 3"
+                className="text-gray-900"
+              />
+            </div>
+
+            {/* Nível */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-gray-700">
+                <Trophy className="w-4 h-4" />
+                Como você se considera?
+              </Label>
+              <Select value={nivel} onValueChange={setNivel}>
+                <SelectTrigger className="text-gray-900">
+                  <SelectValue placeholder="Selecione seu nível" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="iniciante">Iniciante</SelectItem>
+                  <SelectItem value="intermediario">Intermediário</SelectItem>
+                  <SelectItem value="avancado">Avançado</SelectItem>
+                  <SelectItem value="atleta">Atleta</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Tempo de Treino */}
+            <div className="space-y-2">
+              <Label htmlFor="tempo" className="flex items-center gap-2 text-gray-700">
+                <Clock className="w-4 h-4" />
+                Quanto tempo de treino tem?
+              </Label>
+              <Input
+                id="tempo"
+                type="number"
+                min="0"
+                max="20"
+                value={tempoTreino}
+                onChange={(e) => setTempoTreino(e.target.value)}
+                placeholder="Ex: 2 (anos)"
+                className="text-gray-900"
+              />
+            </div>
+
             {/* Botões */}
             <div className="flex gap-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 bg-gray-200 text-gray-800 hover:bg-gray-300"
+                className="flex-1"
                 disabled={loading}
               >
-                Cancelar
+                Pular personalização
               </Button>
               <Button
                 type="submit"

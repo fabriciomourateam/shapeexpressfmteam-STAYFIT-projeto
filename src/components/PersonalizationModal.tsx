@@ -4,10 +4,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/use-auth';
-import { User, Heart, Ruler } from 'lucide-react';
+import { User, Heart, Ruler, Target, Dumbbell, Droplets, Moon } from 'lucide-react';
 
 interface PersonalizationModalProps {
   isOpen: boolean;
@@ -20,16 +21,21 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   
-  // Form data - sexo e altura para registro
+  // Form data - todos os campos para personalização
   const [sexo, setSexo] = useState<'masculino' | 'feminino' | ''>('');
+  const [peso, setPeso] = useState('');
   const [altura, setAltura] = useState('');
+  const [objetivo, setObjetivo] = useState('');
+  const [treinosSemana, setTreinosSemana] = useState('');
+  const [aguaDia, setAguaDia] = useState('');
+  const [sonoNoite, setSonoNoite] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!user) return;
     
-    // Validações
+    // Validações básicas (apenas sexo e altura são obrigatórios para o banco)
     if (!sexo) {
       toast({
         title: "Selecione o sexo",
@@ -62,10 +68,15 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
     setLoading(true);
 
     try {
-      console.log('Dados a serem salvos:', {
+      // Log de todos os dados coletados (não salvos no banco)
+      console.log('Dados de personalização coletados:', {
         sexo: sexo,
+        peso: peso,
         altura: alturaNum,
-        perfil_personalizado: true,
+        objetivo: objetivo,
+        treinosSemana: treinosSemana,
+        aguaDia: aguaDia,
+        sonoNoite: sonoNoite,
         user_id: user.id
       });
 
@@ -109,7 +120,7 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
 
       toast({
         title: "Perfil personalizado! 🎉",
-        description: "Agora você terá acesso a dietas específicas para você.",
+        description: "Obrigado pelas informações! Sua dieta foi personalizada com base nos seus dados.",
       });
 
       onComplete();
@@ -133,34 +144,14 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mb-4">
             <Heart className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl text-gray-900">Personalize sua experiência</CardTitle>
+          <CardTitle className="text-2xl text-gray-900">Personalize sua dieta</CardTitle>
           <CardDescription className="text-gray-600">
-            Para oferecer uma dieta específica pra você, precisamos saber mais alguns dados.
+            Para criar um plano alimentar específico para você, precisamos conhecer melhor seu perfil e objetivos.
           </CardDescription>
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Altura */}
-            <div className="space-y-2">
-              <Label htmlFor="altura" className="flex items-center gap-2 text-gray-700">
-                <Ruler className="w-4 h-4" />
-                Altura (m)
-              </Label>
-              <Input
-                id="altura"
-                type="number"
-                step="0.01"
-                min="1.0"
-                max="2.5"
-                value={altura}
-                onChange={(e) => setAltura(e.target.value)}
-                placeholder="Ex: 1.75"
-                className="text-gray-900"
-                required
-              />
-            </div>
-
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Sexo */}
             <div className="space-y-3">
               <Label className="flex items-center gap-2 text-gray-700">
@@ -183,6 +174,122 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
               </RadioGroup>
             </div>
 
+            {/* Peso */}
+            <div className="space-y-2">
+              <Label htmlFor="peso" className="flex items-center gap-2 text-gray-700">
+                <Heart className="w-4 h-4" />
+                Peso (kg)
+              </Label>
+              <Input
+                id="peso"
+                type="number"
+                step="0.1"
+                min="30"
+                max="200"
+                value={peso}
+                onChange={(e) => setPeso(e.target.value)}
+                placeholder="Ex: 70.5"
+                className="text-gray-900"
+              />
+            </div>
+
+            {/* Altura */}
+            <div className="space-y-2">
+              <Label htmlFor="altura" className="flex items-center gap-2 text-gray-700">
+                <Ruler className="w-4 h-4" />
+                Altura (m)
+              </Label>
+              <Input
+                id="altura"
+                type="number"
+                step="0.01"
+                min="1.0"
+                max="2.5"
+                value={altura}
+                onChange={(e) => setAltura(e.target.value)}
+                placeholder="Ex: 1.75"
+                className="text-gray-900"
+                required
+              />
+            </div>
+
+            {/* Objetivo Principal */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-gray-700">
+                <Target className="w-4 h-4" />
+                Qual seu objetivo principal?
+              </Label>
+              <Select value={objetivo} onValueChange={setObjetivo}>
+                <SelectTrigger className="text-gray-900">
+                  <SelectValue placeholder="Selecione seu objetivo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="emagrecimento">Emagrecimento</SelectItem>
+                  <SelectItem value="hipertrofia">Hipertrofia</SelectItem>
+                  <SelectItem value="recomposicao">Recomposição corporal</SelectItem>
+                  <SelectItem value="saude">Melhora de Saúde</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Treinos por Semana */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-gray-700">
+                <Dumbbell className="w-4 h-4" />
+                Treina quantas vezes na semana?
+              </Label>
+              <Select value={treinosSemana} onValueChange={setTreinosSemana}>
+                <SelectTrigger className="text-gray-900">
+                  <SelectValue placeholder="Selecione a frequência" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Não treino</SelectItem>
+                  <SelectItem value="1-2">1-2 vezes por semana</SelectItem>
+                  <SelectItem value="3-4">3-4 vezes por semana</SelectItem>
+                  <SelectItem value="5-6">5-6 vezes por semana</SelectItem>
+                  <SelectItem value="7">Todos os dias</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Água por Dia */}
+            <div className="space-y-2">
+              <Label htmlFor="agua" className="flex items-center gap-2 text-gray-700">
+                <Droplets className="w-4 h-4" />
+                Bebe quantos litros de água por dia?
+              </Label>
+              <Input
+                id="agua"
+                type="number"
+                step="0.5"
+                min="0"
+                max="10"
+                value={aguaDia}
+                onChange={(e) => setAguaDia(e.target.value)}
+                placeholder="Ex: 2.5"
+                className="text-gray-900"
+              />
+            </div>
+
+            {/* Sono por Noite */}
+            <div className="space-y-2">
+              <Label htmlFor="sono" className="flex items-center gap-2 text-gray-700">
+                <Moon className="w-4 h-4" />
+                Dorme quantas horas por noite?
+              </Label>
+              <Input
+                id="sono"
+                type="number"
+                step="0.5"
+                min="4"
+                max="12"
+                value={sonoNoite}
+                onChange={(e) => setSonoNoite(e.target.value)}
+                placeholder="Ex: 7.5"
+                className="text-gray-900"
+              />
+            </div>
+
             {/* Botões */}
             <div className="flex gap-3 pt-4">
               <Button
@@ -192,7 +299,7 @@ export function PersonalizationModal({ isOpen, onClose, onComplete }: Personaliz
                 className="flex-1"
                 disabled={loading}
               >
-                Pular por enquanto
+                Pular personalização
               </Button>
               <Button
                 type="submit"

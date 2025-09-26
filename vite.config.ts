@@ -8,6 +8,16 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Configuração para SPA - redirecionar todas as rotas para index.html
+    historyApiFallback: true,
+  },
+  build: {
+    // Configuração para produção
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
   plugins: [
     react(),

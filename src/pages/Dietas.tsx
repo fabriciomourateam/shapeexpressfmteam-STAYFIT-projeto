@@ -633,7 +633,7 @@ const todosOsPlanos: Record<string, PlanoDetalhes> = {
 
 // Função para obter planos filtrados por gênero
 const obterPlanosPorGenero = (genero: 'masculino' | 'feminino') => {
-  return Object.entries(todosOsPlanos)
+  const planosFiltrados = Object.entries(todosOsPlanos)
     .filter(([_, plano]) => plano.genero === genero)
     .reduce((acc, [key, plano]) => {
       // Remove o prefixo do gênero para manter a interface limpa
@@ -641,6 +641,8 @@ const obterPlanosPorGenero = (genero: 'masculino' | 'feminino') => {
       acc[keyLimpa] = plano;
       return acc;
     }, {} as Record<string, PlanoDetalhes>);
+  
+  return planosFiltrados;
 };
 
 export default function Dietas() {
@@ -662,33 +664,142 @@ export default function Dietas() {
 
   // Verificar se precisa mostrar o modal de personalização
   useEffect(() => {
-    if (profile && !isPersonalized) {
-      setShowPersonalizationModal(true);
-    }
+    // Removido o modal automático - usuário deve clicar no botão
+    // if (profile && !isPersonalized) {
+    //   setShowPersonalizationModal(true);
+    // }
   }, [profile, isPersonalized]);
+
+  // Estados de loading para evitar flash do conteúdo padrão
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
 
   // Lógica de planos baseada no perfil personalizado
   const planosDetalhados = isPersonalized && profile?.sexo 
-    ? getFilteredDietPlans(profile)
+    ? obterPlanosPorGenero(profile.sexo as 'masculino' | 'feminino')
     : obterPlanosPorGenero(generoSelecionado);
+
 
   // Selecionar plano recomendado automaticamente se personalizado
   useEffect(() => {
     if (isPersonalized && profile) {
       const planoRecomendado = getRecommendedDietPlan(profile);
       if (planoRecomendado) {
-        setPlanoSelecionado(planoRecomendado);
+        // Remover o prefixo do gênero para manter consistência com a interface
+        const planoLimpo = planoRecomendado.replace(/^(masc|fem)-/, '');
+        setPlanoSelecionado(planoLimpo);
       }
     }
   }, [isPersonalized, profile]);
 
+  // Verificação adicional para não mostrar conteúdo padrão durante transições
+  useEffect(() => {
+    // Quando não está personalizado mas há profile carregado, aguardar um pouco
+    if (profile && !isPersonalized) {
+      const timer = setTimeout(() => setIsLoadingContent(false), 200);
+      return () => clearTimeout(timer);
+    }
+    
+    // Quando está personalizado, liberar imediatamente
+    if (profile && isPersonalized) {
+      setIsLoadingContent(false);
+    }
+  }, [profile, isPersonalized]);
+
   const plano = planosDetalhados[planoSelecionado];
 
-  // Verificação de segurança para evitar erro quando plano não existir
-  if (!plano) {
+  const handlePersonalizationComplete = () => {
+    setShowPersonalizationModal(false);
+    refreshProfile();
+  };
+
+  // Renderizar modal sempre
+  const modalComponent = (
+    <PersonalizationModal
+      isOpen={showPersonalizationModal}
+      onClose={() => setShowPersonalizationModal(false)}
+      onComplete={handlePersonalizationComplete}
+    />
+  );
+
+  // Verificação para mostrar mensagem de personalização quando não estiver personalizado
+  if (profile && !isPersonalized) {
     return (
-      <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-        <div className="flex items-center justify-center h-64">
+      <div 
+        className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative flex items-center justify-center"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 text-center max-w-md mx-auto">
+          <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Trophy className="w-10 h-10 text-white" />
+          </div>
+          
+          <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+            Personalize sua Dieta
+          </h1>
+          
+          <p className="text-gray-300 mb-8 text-lg">
+            Para oferecer um plano alimentar específico para você, precisamos conhecer melhor seu perfil.
+          </p>
+          
+          <Button
+            onClick={() => setShowPersonalizationModal(true)}
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:opacity-90 text-white px-8 py-3 text-lg font-semibold"
+          >
+            Personalizar Agora
+          </Button>
+        </div>
+        
+        {/* Modal renderizado aqui */}
+        {modalComponent}
+      </div>
+    );
+  }
+
+  // Verificação de segurança para evitar erro quando plano não existir ou ainda carregando
+  if (!plano || isLoadingContent || (isPersonalized && !profile?.sexo)) {
+    return (
+      <div 
+        className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        {/* Padrão mais sutil de pontos */}
+        <div 
+          className="absolute inset-0 opacity-15" 
+          style={{
+            backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+            backgroundSize: '8px 8px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 flex items-center justify-center h-64">
           <div className="text-center">
             <h2 className="text-xl font-bold text-gray-300 mb-2">Carregando dieta personalizada...</h2>
             <p className="text-gray-400">Preparando seu plano alimentar específico</p>
@@ -697,11 +808,6 @@ export default function Dietas() {
       </div>
     );
   }
-
-  const handlePersonalizationComplete = () => {
-    setShowPersonalizationModal(false);
-    refreshProfile();
-  };
 
   // Função para alternar refeição aberta/fechada
   const toggleRefeicao = (refeicao: string) => {
@@ -762,28 +868,28 @@ export default function Dietas() {
 
     return (
       <Card className={`bg-gradient-to-br ${corConfig.card} text-gray-900 hover:shadow-xl transition-all duration-300 relative overflow-hidden`}>
-        <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${corConfig.icon.replace('from-', 'from-').replace('to-', 'to-')}/30 rounded-full -translate-y-10 translate-x-10`}></div>
+        <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${corConfig.icon.replace('from-', 'from-').replace('to-', 'to-')}/30 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
         <Collapsible 
           open={refeicoesAbertas[refeicaoKey]} 
           onOpenChange={() => toggleRefeicao(refeicaoKey)}
         >
           <CollapsibleTrigger asChild>
-            <CardHeader className="pb-4 relative z-10 cursor-pointer hover:bg-orange-100/50 transition-colors rounded-t-lg">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${corConfig.icon} shadow-lg`}>
-                    <Coffee className="w-6 h-6 text-white" />
+            <CardHeader className="pb-3 sm:pb-4 relative z-10 cursor-pointer hover:bg-orange-100/50 transition-colors rounded-t-lg p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <CardTitle className="flex items-center gap-3 flex-1">
+                  <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${corConfig.icon} shadow-lg`}>
+                    <Coffee className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl">{emoji}</span>
-                      <span className="diet-title text-gray-800">{titulo}</span>
+                      <span className="text-xl sm:text-2xl">{emoji}</span>
+                      <span className="diet-title text-gray-800 text-sm sm:text-base font-bold break-words">{titulo}</span>
                     </div>
-                    <p className="diet-description text-gray-600 mt-1">{descricao}</p>
+                    <p className="diet-description text-gray-600 mt-1 text-xs sm:text-sm">{descricao}</p>
                   </div>
                 </CardTitle>
-                <div className="flex items-center gap-3">
-                  <div className={`flex items-center gap-2 text-sm ${corConfig.text}`}>
+                <div className="flex items-center justify-between sm:justify-end gap-3">
+                  <div className={`flex items-center gap-2 text-xs sm:text-sm ${corConfig.text}`}>
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{progresso.marcados}/{progresso.total}</span>
                   </div>
@@ -803,17 +909,19 @@ export default function Dietas() {
                 const isChecked = alimentosMarcados[chave] || false;
                 
                 return (
-                  <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                    <div className="flex items-center gap-3">
+                  <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
+                    <div className="flex items-start gap-3">
                       <Checkbox
                         id={`${refeicaoKey}-${index}`}
                         checked={isChecked}
                         onCheckedChange={() => toggleAlimento(refeicaoKey, item)}
-                        className={corConfig.checkbox}
+                        className={`${corConfig.checkbox} flex-shrink-0 mt-0.5`}
                       />
                       <label 
                         htmlFor={`${refeicaoKey}-${index}`}
-                        className="text-gray-800 diet-item font-medium leading-relaxed cursor-pointer flex-1"
+                        className={`text-gray-800 diet-item font-medium leading-relaxed cursor-pointer flex-1 text-sm sm:text-base break-words transition-all duration-200 ${
+                          isChecked ? 'line-through text-gray-500 opacity-70' : ''
+                        }`}
                       >
                         {item}
                       </label>
@@ -829,8 +937,34 @@ export default function Dietas() {
   };
 
   return (
-    <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-      <div className="space-y-6">
+    <div 
+      className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10 space-y-6">
         {/* Header com título centralizado e toggle de gênero */}
         <div className="text-center space-y-4 relative">
           {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
@@ -992,13 +1126,6 @@ export default function Dietas() {
           </Card>
         </div>
       </div>
-
-      {/* Modal de Personalização */}
-      <PersonalizationModal
-        isOpen={showPersonalizationModal}
-        onClose={() => setShowPersonalizationModal(false)}
-        onComplete={handlePersonalizationComplete}
-      />
 
       {/* Modal do App de Substituição */}
       <SubstitutionAppModal
