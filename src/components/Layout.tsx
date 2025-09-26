@@ -6,6 +6,7 @@ import {
   Trophy,
   UtensilsCrossed,
   Dumbbell,
+  MessageCircle,
   User,
   LogOut
 } from 'lucide-react';
@@ -34,8 +35,9 @@ export default function Layout({ children }: LayoutProps) {
   const navigationItems = [
     { to: '/', icon: Calendar, label: 'Desafio' },
     { to: '/ranking', icon: Trophy, label: 'Ranking' },
-    { to: '/dietas', icon: UtensilsCrossed, label: 'Dietas' },
-    { to: '/treinos', icon: Dumbbell, label: 'Treinos' },
+    { to: '/dietas', icon: UtensilsCrossed, label: 'Dieta' },
+    { to: '/treinos', icon: Dumbbell, label: 'Treino' },
+    { to: '/suporte', icon: MessageCircle, label: 'Suporte' },
     { to: '/perfil', icon: User, label: 'Perfil' },
   ];
 
@@ -45,6 +47,7 @@ export default function Layout({ children }: LayoutProps) {
       'bg-gradient-to-br from-blue-400 to-blue-600',     // Ranking
       'bg-gradient-to-br from-green-400 to-green-600',   // Dietas
       'bg-gradient-to-br from-purple-400 to-purple-600', // Treinos
+      'bg-gradient-to-br from-orange-400 to-red-500',   // Suporte
       'bg-gradient-to-br from-gray-400 to-gray-600',     // Perfil
     ];
     return colors[index] || colors[0];
@@ -56,13 +59,41 @@ export default function Layout({ children }: LayoutProps) {
       'bg-gradient-to-br from-blue-400 to-blue-600',     // Ranking
       'bg-gradient-to-br from-green-400 to-green-600',   // Dietas
       'bg-gradient-to-br from-purple-400 to-purple-600', // Treinos
+      'bg-gradient-to-br from-orange-400 to-red-500',   // Suporte
       'bg-gradient-to-br from-gray-400 to-gray-600',     // Perfil
     ];
     return colors[index] || colors[0];
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div 
+      className="min-h-screen relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10">
       {/* Sidebar Navigation - Desktop */}
       <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-80 bg-gray-800 border-r border-gray-700 overflow-y-auto">
         <div className="p-6">
@@ -198,6 +229,7 @@ export default function Layout({ children }: LayoutProps) {
           }
         }
       `}</style>
+      </div>
     </div>
   );
 }

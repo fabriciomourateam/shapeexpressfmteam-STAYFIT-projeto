@@ -667,6 +667,9 @@ export default function Dietas() {
     }
   }, [profile, isPersonalized]);
 
+  // Estados de loading para evitar flash do conteúdo padrão
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
+
   // Lógica de planos baseada no perfil personalizado
   const planosDetalhados = isPersonalized && profile?.sexo 
     ? getFilteredDietPlans(profile)
@@ -680,15 +683,53 @@ export default function Dietas() {
         setPlanoSelecionado(planoRecomendado);
       }
     }
+    // Pequeno delay para garantir que a personalização foi aplicada
+    const timer = setTimeout(() => setIsLoadingContent(false), 100);
+    return () => clearTimeout(timer);
   }, [isPersonalized, profile]);
+
+  // Verificação adicional para não mostrar conteúdo padrão durante transições
+  useEffect(() => {
+    // Quando não está personalizado mas há profile carregado, aguardar um pouco
+    if (profile && !isPersonalized) {
+      const timer = setTimeout(() => setIsLoadingContent(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [profile, isPersonalized]);
 
   const plano = planosDetalhados[planoSelecionado];
 
-  // Verificação de segurança para evitar erro quando plano não existir
-  if (!plano) {
+  // Verificação de segurança para evitar erro quando plano não existir ou ainda carregando
+  if (!plano || isLoadingContent || (isPersonalized && !profile?.sexo)) {
     return (
-      <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-        <div className="flex items-center justify-center h-64">
+      <div 
+        className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        {/* Padrão mais sutil de pontos */}
+        <div 
+          className="absolute inset-0 opacity-15" 
+          style={{
+            backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+            backgroundSize: '8px 8px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 flex items-center justify-center h-64">
           <div className="text-center">
             <h2 className="text-xl font-bold text-gray-300 mb-2">Carregando dieta personalizada...</h2>
             <p className="text-gray-400">Preparando seu plano alimentar específico</p>
@@ -829,8 +870,34 @@ export default function Dietas() {
   };
 
   return (
-    <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-      <div className="space-y-6">
+    <div 
+      className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10 space-y-6">
         {/* Header com título centralizado e toggle de gênero */}
         <div className="text-center space-y-4 relative">
           {/* Toggle de Gênero - Só aparece se não estiver personalizado */}

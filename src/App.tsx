@@ -9,6 +9,7 @@ import DesafioDiario from "./pages/DesafioDiario";
 import Ranking from "./pages/Ranking";
 import Dietas from "./pages/Dietas";
 import Treinos from "./pages/Treinos";
+import Suporte from "./pages/Suporte";
 import Perfil from "./pages/Perfil";
 import Login from "./pages/Login";
 import WelcomePage from "./pages/WelcomePage";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/ranking" element={<Layout><Ranking /></Layout>} />
             <Route path="/dietas" element={<Layout><Dietas /></Layout>} />
             <Route path="/treinos" element={<Layout><Treinos /></Layout>} />
+            <Route path="/suporte" element={<Layout><Suporte /></Layout>} />
             <Route path="/perfil" element={<Layout><Perfil /></Layout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

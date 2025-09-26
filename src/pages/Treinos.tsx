@@ -22,10 +22,25 @@ export default function Treinos() {
     setTreinoAberto(treinoAberto === diaNumero ? null : diaNumero);
   };
 
+  // Estados de loading para evitar flash do conteúdo padrão
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
+
   // Verificar se precisa mostrar o modal de personalização
   useEffect(() => {
     if (profile && !isTrainingPersonalized) {
       setShowPersonalizationModal(true);
+    }
+    // Pequeno delay para garantir que a personalização foi aplicada
+    const timer = setTimeout(() => setIsLoadingContent(false), 100);
+    return () => clearTimeout(timer);
+  }, [profile, isTrainingPersonalized]);
+
+  // Verificação adicional para não mostrar conteúdo padrão durante transições
+  useEffect(() => {
+    // Quando não está personalizado mas há profile carregado, aguardar um pouco
+    if (profile && !isTrainingPersonalized) {
+      const timer = setTimeout(() => setIsLoadingContent(false), 200);
+      return () => clearTimeout(timer);
     }
   }, [profile, isTrainingPersonalized]);
 
@@ -36,11 +51,37 @@ export default function Treinos() {
 
   const treino = Object.values(treinosDetalhados)[0];
 
-  // Verificação de segurança para evitar erro quando treino não existir
-  if (!treino) {
+  // Verificação de segurança para evitar erro quando treino não existir ou ainda carregando
+  if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
     return (
-      <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-        <div className="flex items-center justify-center h-64">
+      <div 
+        className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+        }}
+      >
+        {/* Padrão quadriculado premium */}
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '10px 10px'
+          }}
+        ></div>
+        
+        {/* Padrão mais sutil de pontos */}
+        <div 
+          className="absolute inset-0 opacity-15" 
+          style={{
+            backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+            backgroundSize: '8px 8px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 flex items-center justify-center h-64">
           <div className="text-center">
             <h2 className="text-xl font-bold text-gray-300 mb-2">Carregando treinos personalizados...</h2>
             <p className="text-gray-400">Preparando seu plano de treino específico</p>
@@ -77,8 +118,34 @@ export default function Treinos() {
 
 
   return (
-    <div className="min-h-screen text-white p-6 pb-6 lg:pb-6" style={{ backgroundColor: '#0B111F' }}>
-      <div className="space-y-6">
+    <div 
+      className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
+      style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
+      }}
+    >
+      {/* Padrão quadriculado premium */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '10px 10px'
+        }}
+      ></div>
+      
+      {/* Padrão mais sutil de pontos */}
+      <div 
+        className="absolute inset-0 opacity-15" 
+        style={{
+          backgroundImage: `radial-gradient(circle at center, rgba(203, 213, 225, 0.4) 0.5px, transparent 0.5px)`,
+          backgroundSize: '8px 8px'
+        }}
+      ></div>
+      
+      <div className="relative z-10 space-y-6">
         {/* Header com título centralizado e toggle de gênero */}
         <div className="text-center space-y-4 relative">
           {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
@@ -129,7 +196,7 @@ export default function Treinos() {
                 <div className="p-3 bg-white/20 rounded-xl">
                   <Dumbbell className="w-8 h-8 text-white" />
                 </div>
-                <div>
+          <div>
                   <h2 className="text-2xl font-bold text-white">
                     {treino.frequencia}
                   </h2>
@@ -138,7 +205,7 @@ export default function Treinos() {
                       {(treino as any).observacao}
                     </p>
                   )}
-                </div>
+          </div>
               </div>
 
               {/* Lado Direito - Tipo e Duração */}
@@ -343,7 +410,7 @@ export default function Treinos() {
                               className="bg-green-500 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${progresso.porcentagem}%` }}
                             ></div>
-                          </div>
+                    </div>
                           <span className="text-xs text-gray-600 font-medium">
                             {progresso.realizados}/{progresso.total} exercícios
                           </span>
@@ -361,7 +428,7 @@ export default function Treinos() {
                   
                   return (
                     <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
-                      <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-start gap-3 flex-1">
                           <Checkbox
                             checked={exercicioRealizado}
@@ -370,11 +437,11 @@ export default function Treinos() {
                           />
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-gray-800 leading-tight">{exercicio.nome}</h4>
+                        <h4 className="font-bold text-gray-800 leading-tight">{exercicio.nome}</h4>
                               {exercicioRealizado && (
                                 <span className="text-green-600 text-sm font-semibold">✓ Concluído</span>
                               )}
-                            </div>
+                      </div>
                             <div className="flex gap-2 flex-wrap">
                               <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm">
                                 📊 {exercicio.series} séries
@@ -386,18 +453,18 @@ export default function Treinos() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          {exercicio.execucao && (
+                      {exercicio.execucao && (
                             <Dialog>
                               <DialogTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
+                        <Button
+                          size="sm"
+                          variant="outline"
                                   onClick={(e) => e.stopPropagation()}
-                                  className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto"
-                                >
-                                  <Play className="w-3 h-3" />
-                                  Ver Execução
-                                </Button>
+                          className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto"
+                        >
+                          <Play className="w-3 h-3" />
+                          Ver Execução
+                        </Button>
                               </DialogTrigger>
                               <DialogContent className="max-w-4xl">
                                 <DialogHeader>
@@ -418,10 +485,10 @@ export default function Treinos() {
                                 </div>
                               </DialogContent>
                             </Dialog>
-                          )}
-                        </div>
-                      </div>
+                      )}
                     </div>
+                    </div>
+                  </div>
                   );
                 })}
               </CardContent>
@@ -435,31 +502,31 @@ export default function Treinos() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Dicas para o Treino */}
           <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-            <CardHeader>
+          <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
-                  <span className="text-2xl">💡</span>
-                </div>
+              <span className="text-2xl">💡</span>
+            </div>
                 Dicas para o Treino
-              </CardTitle>
-            </CardHeader>
+            </CardTitle>
+          </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Sempre faça aquecimento antes do treino</span>
-              </div>
+            </div>
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Mantenha a execução correta dos exercícios</span>
-              </div>
+            </div>
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Descanse de 48-72h entre treinos do mesmo grupo muscular</span>
-              </div>
+            </div>
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Hidrate-se durante o treino</span>
-              </div>
+            </div>
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Progrida gradualmente nas cargas</span>
@@ -467,65 +534,65 @@ export default function Treinos() {
               <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                 <span className="text-gray-300">Sempre busque chegar na falha muscular</span>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Cardios */}
+        {/* Cardios */}
           <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-            <CardHeader>
+          <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <div className="p-2 rounded-lg bg-gradient-to-r from-red-400 to-pink-500">
-                  <span className="text-2xl">❤️</span>
+              <span className="text-2xl">❤️</span>
                 </div>
-                Cardios
-              </CardTitle>
-            </CardHeader>
+              Cardios
+            </CardTitle>
+          </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div>
                   <span className="text-gray-300 font-semibold">▶️ APÓS O TREINO:</span>
-                </div>
+      </div>
               </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div>
                   <span className="text-gray-300 font-semibold">📍 OPÇÃO 01:</span>
                   <span className="text-gray-300"> 20 minutos de escada ou de caminhada rápida na esteira com a máxima inclinação que conseguir (sempre acima de 4º graus de inclinação), sem correr.</span>
-                </div>
-              </div>
+            </div>
+      </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div>
                   <span className="text-gray-300 font-semibold">📍 OPÇÃO 02 (para dias mais corridos):</span>
                   <span className="text-gray-300"> HIIT de 10 minutos na esteira ou na bike (1 minuto numa velocidade leve para 1 minuto na máxima velocidade)</span>
-                </div>
+              </div>
               </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div>
                   <span className="text-gray-300 font-semibold">📍 OPÇÃO 03:</span>
                   <span className="text-gray-300"> 30 minutos de bike, elíptico ou caminhada rápida na esteira ou na rua (sem inclinação).</span>
+            </div>
                 </div>
-              </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="space-y-2">
                   <div>
                     <span className="text-gray-300 font-semibold">⚠️ Não faça o cardio antes do treino.</span>
-                  </div>
+              </div>
                   <div>
                     <span className="text-gray-300 font-semibold">⚠️ Sempre mantenha uma intensidade a ponto de suar e da respiração se manter ofegante.</span>
-                  </div>
+                </div>
                   <div>
                     <span className="text-gray-300 font-semibold">⚠️ Caso não consiga fazer após o treino, pode fazer em um outro horário do dia, ou até mesmo em um dia sem treino.</span>
-                  </div>
-                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+              </div>
             </div>
             
       {/* Modal de Personalização */}
