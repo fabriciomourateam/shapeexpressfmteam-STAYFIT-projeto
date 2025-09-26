@@ -1,5 +1,5 @@
 {
-  "name": "Shape Express",
+  "name": "Shape Express App",
   "short_name": "Shape Express",
   "description": "Seu app de transformação física - Desafio 7 dias com Fabricio Moura",
   "start_url": "/",
@@ -9,7 +9,7 @@
   "orientation": "portrait",
   "scope": "/",
   "lang": "pt-BR",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
