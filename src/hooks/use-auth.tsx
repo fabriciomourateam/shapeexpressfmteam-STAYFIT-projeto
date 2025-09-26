@@ -81,12 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut({ scope: 'local' });
+      // Tentar logout sem scope específico (usa padrão)
+      await supabase.auth.signOut();
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
-      // Forçar logout local mesmo com erro
+      console.log('Logout com erro, mas continuando:', error);
+    } finally {
+      // Sempre forçar logout local
       setUser(null);
       setSession(null);
+      // Limpar dados locais
+      localStorage.clear();
+      sessionStorage.clear();
     }
   };
 
