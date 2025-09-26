@@ -1,4 +1,4 @@
-// Service Worker simplificado para PWA
+// Service Worker para PWA com suporte a SPA
 const CACHE_NAME = 'shape-express-v3.0.0';
 
 // Instalar service worker
@@ -15,6 +15,16 @@ self.addEventListener('activate', (event) => {
 
 // Interceptar requisições
 self.addEventListener('fetch', (event) => {
-  // Apenas log, sem cache para evitar problemas
+  // Para requisições de navegação (SPA), sempre retornar index.html
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match('/index.html');
+      })
+    );
+    return;
+  }
+  
+  // Para outros recursos, apenas log
   console.log('Fetch interceptado:', event.request.url);
 });
