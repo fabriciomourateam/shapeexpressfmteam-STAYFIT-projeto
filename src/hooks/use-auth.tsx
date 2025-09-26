@@ -80,7 +80,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      // Forçar logout local mesmo com erro
+      setUser(null);
+      setSession(null);
+    }
   };
 
   return (
