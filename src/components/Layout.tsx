@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { PWAInstallBanner } from '@/components/PWAInstallBanner';
 
 interface LayoutProps {
   children: ReactNode;
@@ -217,19 +218,22 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </nav>
 
-      {/* Estilos adicionais */}
-      <style>{`
-        .safe-area-pb {
-          padding-bottom: env(safe-area-inset-bottom);
-        }
-        
-        @media (max-width: 1023px) {
-          body {
-            padding-bottom: 0;
-          }
-        }
-      `}</style>
-      </div>
-    </div>
-  );
-}
+          {/* Estilos adicionais */}
+          <style>{`
+            .safe-area-pb {
+              padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            @media (max-width: 1023px) {
+              body {
+                padding-bottom: 0;
+              }
+            }
+          `}</style>
+          </div>
+          
+          {/* Banner de instalação PWA */}
+          <PWAInstallBanner />
+        </div>
+      );
+    }
