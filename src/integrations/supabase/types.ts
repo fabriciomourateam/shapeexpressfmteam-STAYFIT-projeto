@@ -318,6 +318,7 @@ export type Database = {
           treino_personalizado: boolean
           updated_at: string
           user_id: string
+          welcome_seen: boolean
         }
         Insert: {
           altura?: number | null
@@ -332,6 +333,7 @@ export type Database = {
           treino_personalizado?: boolean
           updated_at?: string
           user_id: string
+          welcome_seen?: boolean
         }
         Update: {
           altura?: number | null
@@ -346,6 +348,7 @@ export type Database = {
           treino_personalizado?: boolean
           updated_at?: string
           user_id?: string
+          welcome_seen?: boolean
         }
         Relationships: []
       }

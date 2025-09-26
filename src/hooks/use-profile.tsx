@@ -11,7 +11,9 @@ interface UseProfileReturn {
   error: string | null;
   isPersonalized: boolean;
   isTrainingPersonalized: boolean;
+  hasSeenWelcome: boolean;
   refreshProfile: () => Promise<void>;
+  markWelcomeAsSeen: () => Promise<void>;
 }
 
 export function useProfile(): UseProfileReturn {
@@ -56,6 +58,25 @@ export function useProfile(): UseProfileReturn {
 
   const isPersonalized = profile?.perfil_personalizado || false;
   const isTrainingPersonalized = profile?.treino_personalizado || false;
+  const hasSeenWelcome = profile?.welcome_seen || false;
+
+  const markWelcomeAsSeen = useCallback(async () => {
+    if (!user || !profile) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ welcome_seen: true })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      // Atualizar estado local
+      setProfile(prev => prev ? { ...prev, welcome_seen: true } : null);
+    } catch (err) {
+      console.error('Erro ao marcar welcome como visto:', err);
+    }
+  }, [user, profile]);
 
   return {
     profile,
@@ -63,6 +84,8 @@ export function useProfile(): UseProfileReturn {
     error,
     isPersonalized,
     isTrainingPersonalized,
-    refreshProfile
+    hasSeenWelcome,
+    refreshProfile,
+    markWelcomeAsSeen
   };
 }

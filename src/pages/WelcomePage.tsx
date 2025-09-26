@@ -2,17 +2,21 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useProfile } from '@/hooks/use-profile';
 import { Trophy, Target, Flame, Zap, ArrowRight, Play, SkipForward, Users } from 'lucide-react';
 
 export default function WelcomePage() {
   const navigate = useNavigate();
+  const { markWelcomeAsSeen } = useProfile();
   const [videoLoaded, setVideoLoaded] = useState(false);
 
-  const handleStartChallenge = () => {
+  const handleStartChallenge = async () => {
+    await markWelcomeAsSeen();
     navigate('/desafio-diario');
   };
 
-  const handleSkipPresentation = () => {
+  const handleSkipPresentation = async () => {
+    await markWelcomeAsSeen();
     navigate('/desafio-diario');
   };
 

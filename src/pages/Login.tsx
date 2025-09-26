@@ -6,12 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
 import { useToast } from '@/hooks/use-toast';
 import { parseWeight } from '@/lib/weightUtils';
 import { Crown, Trophy, Target, Dumbbell, Zap, Users, TrendingUp } from 'lucide-react';
 
 export default function Login() {
   const { user, signIn, signUp, loading } = useAuth();
+  const { profile, hasSeenWelcome } = useProfile();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +22,12 @@ export default function Login() {
   const [signupData, setSignupData] = useState({ nome: '', email: '', password: '', pesoInicial: '' });
 
   // Redirecionar se já estiver logado
-  if (user && !loading) {
+  if (user && !loading && profile) {
+    // Se já viu a página de boas-vindas, vai direto para o desafio
+    if (hasSeenWelcome) {
+      return <Navigate to="/" replace />;
+    }
+    // Se não viu, vai para a página de boas-vindas
     return <Navigate to="/welcome" replace />;
   }
 
