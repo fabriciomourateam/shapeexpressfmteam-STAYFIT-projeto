@@ -247,8 +247,8 @@ export default function Layout({ children }: LayoutProps) {
           `}</style>
           </div>
           
-          {/* Banner de instalação PWA */}
-          <PWAInstallBanner />
+          {/* Banner de instalação PWA - Temporariamente desabilitado */}
+          {/* <PWAInstallBanner /> */}
         </div>
       );
     }
