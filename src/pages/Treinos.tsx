@@ -135,12 +135,11 @@ export default function Treinos() {
   if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
     return (
       <div 
-=======
+      
   // Verificação de segurança para evitar erro quando treino não existir ou ainda carregando
   if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
     return (
       <div 
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
         className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
         style={{
           background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
@@ -296,7 +295,6 @@ export default function Treinos() {
                   )}
           </div>
               </div>
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
 
                {/* Lado Direito - Tipo e Duração */}
                <div className="flex flex-col items-end gap-2">
@@ -503,7 +501,6 @@ export default function Treinos() {
                           ) : null;
                         })()}
                     </div>
-=======
             <Card
               key={dia.dia}
               className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
@@ -540,7 +537,6 @@ export default function Treinos() {
                         </div>
                       ) : null;
                     })()}
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -610,7 +606,6 @@ export default function Treinos() {
                                     </div>
                                   </DialogContent>
                                 </Dialog>
-=======
                 {dia.exercicios.map((exercicio, index) => {
                   const exercicioRealizado = isExercicioRealizado(dia.dia, exercicio.nome, index);
                   
@@ -674,7 +669,6 @@ export default function Treinos() {
                                 </div>
                               </DialogContent>
                             </Dialog>
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
                       )}
                     </div>
                     </div>
@@ -783,7 +777,6 @@ export default function Treinos() {
           </CardContent>
         </Card>
               </div>
->>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
             </div>
               Dicas para o Treino
             </CardTitle>
