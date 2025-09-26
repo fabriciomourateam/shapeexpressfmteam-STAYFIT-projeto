@@ -127,7 +127,6 @@ export default function Treinos() {
     refreshProfile();
   };
 
-
   return (
     <div 
       className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
