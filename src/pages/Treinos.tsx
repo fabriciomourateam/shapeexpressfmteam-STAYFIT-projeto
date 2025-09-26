@@ -368,7 +368,7 @@ export default function Treinos() {
       </div>
 
         {/* Dias de Treino */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {treino.dias.map((dia, cardIndex) => {
           // Cores diferentes para cada card de treino
           const cardColors = [
@@ -384,22 +384,23 @@ export default function Treinos() {
           return (
             <Card
               key={dia.dia}
-              className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
+              className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
             >
-              <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${colors.accent}/20 rounded-full -translate-y-10 translate-x-10`}></div>
-              <CardHeader className="pb-4 relative z-10">
-                <CardTitle className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${colors.accent} shadow-lg`}>
-                    <span className="text-white text-xl font-bold">{dia.dia}</span>
-                  </div>
-                  <div className="flex-1">
-                    <div 
-                      className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                      onClick={() => toggleTreino(dia.dia)}
-                    >
-                      <span className="text-2xl">{colors.emoji}</span>
-                      <span className="text-gray-800 font-bold">{dia.nome}</span>
+              <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${colors.accent}/20 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
+              <CardHeader className="pb-3 sm:pb-4 relative z-10 p-4 sm:p-6">
+                <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${colors.accent} shadow-lg`}>
+                      <span className="text-white text-lg sm:text-xl font-bold">{dia.dia}</span>
                     </div>
+                    <div className="flex-1">
+                      <div 
+                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => toggleTreino(dia.dia)}
+                      >
+                        <span className="text-xl sm:text-2xl">{colors.emoji}</span>
+                        <span className="text-gray-800 font-bold text-sm sm:text-base">{dia.nome}</span>
+                      </div>
                     <p className="text-gray-600 text-sm mt-1">{dia.grupo}</p>
                     {(() => {
                       const progresso = getProgressoDia(dia.dia, dia.exercicios.length);
@@ -427,32 +428,32 @@ export default function Treinos() {
                   const exercicioRealizado = isExercicioRealizado(dia.dia, exercicio.nome, index);
                   
                   return (
-                    <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
-                    <div className="flex items-start justify-between gap-3 mb-3">
+                    <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
                         <div className="flex items-start gap-3 flex-1">
                           <Checkbox
                             checked={exercicioRealizado}
                             onCheckedChange={() => toggleExercicio(dia.dia, exercicio.nome, index)}
-                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600 mt-1"
+                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600 mt-1 flex-shrink-0"
                           />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-bold text-gray-800 leading-tight">{exercicio.nome}</h4>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                              <h4 className="font-bold text-gray-800 leading-tight text-sm sm:text-base break-words">{exercicio.nome}</h4>
                               {exercicioRealizado && (
-                                <span className="text-green-600 text-sm font-semibold">✓ Concluído</span>
+                                <span className="text-green-600 text-xs sm:text-sm font-semibold">✓ Concluído</span>
                               )}
-                      </div>
-                            <div className="flex gap-2 flex-wrap">
-                              <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm">
+                            </div>
+                            <div className="flex gap-1 sm:gap-2 flex-wrap">
+                              <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm text-xs px-2 py-1">
                                 📊 {exercicio.series} séries
                               </Badge>
-                              <Badge variant="outline" className="border-orange-400 text-orange-700 bg-orange-50 font-semibold shadow-sm">
+                              <Badge variant="outline" className="border-orange-400 text-orange-700 bg-orange-50 font-semibold shadow-sm text-xs px-2 py-1">
                                 🔄 {exercicio.repeticoes}
                               </Badge>
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 sm:ml-auto">
                       {exercicio.execucao && (
                             <Dialog>
                               <DialogTrigger asChild>
@@ -460,10 +461,11 @@ export default function Treinos() {
                           size="sm"
                           variant="outline"
                                   onClick={(e) => e.stopPropagation()}
-                          className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto"
+                          className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto whitespace-nowrap"
                         >
                           <Play className="w-3 h-3" />
-                          Ver Execução
+                          <span className="hidden sm:inline">Ver Execução</span>
+                          <span className="sm:hidden">Ver</span>
                         </Button>
                               </DialogTrigger>
                               <DialogContent className="max-w-4xl">

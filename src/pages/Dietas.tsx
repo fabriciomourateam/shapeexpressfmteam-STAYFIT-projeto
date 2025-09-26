@@ -803,28 +803,28 @@ export default function Dietas() {
 
     return (
       <Card className={`bg-gradient-to-br ${corConfig.card} text-gray-900 hover:shadow-xl transition-all duration-300 relative overflow-hidden`}>
-        <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${corConfig.icon.replace('from-', 'from-').replace('to-', 'to-')}/30 rounded-full -translate-y-10 translate-x-10`}></div>
+        <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${corConfig.icon.replace('from-', 'from-').replace('to-', 'to-')}/30 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
         <Collapsible 
           open={refeicoesAbertas[refeicaoKey]} 
           onOpenChange={() => toggleRefeicao(refeicaoKey)}
         >
           <CollapsibleTrigger asChild>
-            <CardHeader className="pb-4 relative z-10 cursor-pointer hover:bg-orange-100/50 transition-colors rounded-t-lg">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${corConfig.icon} shadow-lg`}>
-                    <Coffee className="w-6 h-6 text-white" />
+            <CardHeader className="pb-3 sm:pb-4 relative z-10 cursor-pointer hover:bg-orange-100/50 transition-colors rounded-t-lg p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <CardTitle className="flex items-center gap-3 flex-1">
+                  <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${corConfig.icon} shadow-lg`}>
+                    <Coffee className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl">{emoji}</span>
-                      <span className="diet-title text-gray-800">{titulo}</span>
+                      <span className="text-xl sm:text-2xl">{emoji}</span>
+                      <span className="diet-title text-gray-800 text-sm sm:text-base font-bold break-words">{titulo}</span>
                     </div>
-                    <p className="diet-description text-gray-600 mt-1">{descricao}</p>
+                    <p className="diet-description text-gray-600 mt-1 text-xs sm:text-sm">{descricao}</p>
                   </div>
                 </CardTitle>
-                <div className="flex items-center gap-3">
-                  <div className={`flex items-center gap-2 text-sm ${corConfig.text}`}>
+                <div className="flex items-center justify-between sm:justify-end gap-3">
+                  <div className={`flex items-center gap-2 text-xs sm:text-sm ${corConfig.text}`}>
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{progresso.marcados}/{progresso.total}</span>
                   </div>
@@ -844,17 +844,17 @@ export default function Dietas() {
                 const isChecked = alimentosMarcados[chave] || false;
                 
                 return (
-                  <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
-                    <div className="flex items-center gap-3">
+                  <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-orange-100 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90">
+                    <div className="flex items-start gap-3">
                       <Checkbox
                         id={`${refeicaoKey}-${index}`}
                         checked={isChecked}
                         onCheckedChange={() => toggleAlimento(refeicaoKey, item)}
-                        className={corConfig.checkbox}
+                        className={`${corConfig.checkbox} flex-shrink-0 mt-0.5`}
                       />
                       <label 
                         htmlFor={`${refeicaoKey}-${index}`}
-                        className="text-gray-800 diet-item font-medium leading-relaxed cursor-pointer flex-1"
+                        className="text-gray-800 diet-item font-medium leading-relaxed cursor-pointer flex-1 text-sm sm:text-base break-words"
                       >
                         {item}
                       </label>
