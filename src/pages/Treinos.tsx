@@ -127,7 +127,6 @@ export default function Treinos() {
     refreshProfile();
   };
 
-
   return (
     <div 
       className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
@@ -157,66 +156,30 @@ export default function Treinos() {
       ></div>
       
       <div className="relative z-10 space-y-6">
-        {/* Header com título centralizado e toggle de gênero */}
-        <div className="text-center space-y-4 relative">
-          {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
-          {!isTrainingPersonalized && (
-        <div className="absolute top-0 right-0 sm:right-0 max-sm:relative max-sm:flex max-sm:justify-center max-sm:mb-4">
-          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 gap-1 max-sm:scale-90">
-            <Toggle
-              pressed={generoSelecionado === 'masculino'}
-              onPressedChange={() => setGeneroSelecionado('masculino')}
-                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'masculino'
-                  ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              👨 Masculino
-            </Toggle>
-            <Toggle
-              pressed={generoSelecionado === 'feminino'}
-              onPressedChange={() => setGeneroSelecionado('feminino')}
-                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${generoSelecionado === 'feminino'
-                  ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-sm'
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              👩 Feminino
-            </Toggle>
-          </div>
+        {/* Header com informações do treino */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Seu Plano de Treino Personalizado
+          </h1>
+          <p className="text-gray-300">
+            Treinos específicos para {profile?.sexo === 'masculino' ? 'homens' : 'mulheres'} com {profile?.frequencia_treino} por semana
+          </p>
         </div>
-          )}
 
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white px-4 py-2 rounded-full font-bold">
-            <Dumbbell className="w-5 h-5" />
-            {isTrainingPersonalized ? 'Seu Plano de Treino Personalizado' : 'Planos de Treino Shape Express'}
-        </div>
-          <p className="text-gray-300 max-w-2xl mx-auto diet-item">
-            {!isTrainingPersonalized && 'Planos de treino personalizados para todos os níveis. Escolha o plano ideal para seus objetivos.'}
-        </p>
-      </div>
-
-
-
-        {/* Card Superior de Informações */}
-        <div className="flex justify-center mb-6">
-          <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 w-full max-w-2xl">
-        <div className="flex items-center justify-between">
-              {/* Lado Esquerdo - Título e Frequência */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white/20 rounded-xl">
-                  <Dumbbell className="w-8 h-8 text-white" />
-                </div>
-          <div>
-                  <h2 className="text-2xl font-bold text-white">
-                    {treino.frequencia}
-                  </h2>
-                  {(treino as any).observacao && (
-                    <p className="text-white/80 text-xs mt-1">
-                      {(treino as any).observacao}
-                    </p>
-                  )}
-          </div>
+        {/* Card Superior com Informações do Treino */}
+        <Card className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 border-slate-700/50 text-white shadow-2xl">
+          <CardContent className="p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              {/* Lado Esquerdo - Nome e Observação */}
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold text-white">
+                  {treino.frequencia}
+                </h2>
+                {(treino as any).observacao && (
+                  <p className="text-white/80 text-xs mt-1">
+                    {(treino as any).observacao}
+                  </p>
+                )}
               </div>
 
               {/* Lado Direito - Tipo e Duração */}
@@ -224,54 +187,54 @@ export default function Treinos() {
                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                   {getTipoIcon(treino.tipo)}
                   <span className="ml-1 capitalize">{treino.tipo === 'academia' ? 'Academia' : 'Casa'}</span>
-            </Badge>
+                </Badge>
                 <div className="flex items-center gap-1 text-white/90 text-sm">
                   <Clock className="w-4 h-4" />
                   <span>{treino.duracao}</span>
                 </div>
-          </div>
-        </div>
-        
+              </div>
+            </div>
+            
             {/* Botão de Orientações no Centro */}
             <div className="flex justify-center mt-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
                     className="bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/50 px-6 py-2 text-sm font-semibold"
-              >
-                <Info className="w-4 h-4 mr-2" />
-                ORIENTAÇÕES IMPORTANTES
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white text-gray-900">
-              <DialogHeader>
-                <DialogTitle className="text-xl font-bold text-yellow-600 flex items-center gap-2">
-                  <Info className="w-5 h-5" />
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    ORIENTAÇÕES IMPORTANTES
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white text-gray-900">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-yellow-600 flex items-center gap-2">
+                      <Info className="w-5 h-5" />
                       Orientações, Observações e Instruções: LEIA TUDO
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6 text-gray-700">
-                {/* Mentalidade de Treino */}
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-400 p-6 rounded-r-lg">
-                  <h3 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
-                    🎯 MENTALIDADE DE TREINO
-                  </h3>
-                  <p className="text-sm text-blue-700 leading-relaxed mb-3">
-                    Se dedique bastante nos treinos, foque totalmente em <strong>progressão de cargas e de esforço</strong>. Você deve literalmente <strong>DAR O MÁXIMO EM CADA TREINO</strong>, buscando fazer os movimentos de forma correta e dando seu melhor em cada treino que realizar, sempre focando em progredir nas cargas a cada treino, buscando a <strong>falha muscular</strong> em todos os exercícios.
-                  </p>
-                  <div className="bg-blue-100 border border-blue-200 rounded-lg p-3">
-                    <p className="text-blue-800 font-semibold">
-                      <strong>Falha = não conseguir realizar mais nenhuma repetição perfeita</strong>
-                    </p>
-                  </div>
-                </div>
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-6 text-gray-700">
+                    {/* Mentalidade de Treino */}
+                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-400 p-6 rounded-r-lg">
+                      <h3 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                        🎯 MENTALIDADE DE TREINO
+                      </h3>
+                      <p className="text-sm text-blue-700 leading-relaxed mb-3">
+                        Se dedique bastante nos treinos, foque totalmente em <strong>progressão de cargas e de esforço</strong>. Você deve literalmente <strong>DAR O MÁXIMO EM CADA TREINO</strong>, buscando fazer os movimentos de forma correta e dando seu melhor em cada treino que realizar, sempre focando em progredir nas cargas a cada treino, buscando a <strong>falha muscular</strong> em todos os exercícios.
+                      </p>
+                      <div className="bg-blue-100 border border-blue-200 rounded-lg p-3">
+                        <p className="text-blue-800 font-semibold">
+                          <strong>Falha = não conseguir realizar mais nenhuma repetição perfeita</strong>
+                        </p>
+                      </div>
+                    </div>
 
-                {/* Como Identificar Falha */}
+                    {/* Como Identificar Falha */}
                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-6 rounded-r-lg">
                       <h3 className="font-bold text-green-800 mb-3 flex items-center gap-2">
-                    🎯 COMO IDENTIFICAR SE CHEGOU À FALHA
-                  </h3>
+                        🎯 COMO IDENTIFICAR SE CHEGOU À FALHA
+                      </h3>
                       <p className="text-sm text-green-700 leading-relaxed mb-3">
                         A ideia é você fazer as repetições previstas e não conseguir fazer mais nenhuma repetição com qualidade, pois faltará força para completar o movimento, falhando a musculatura.
                       </p>
@@ -292,17 +255,17 @@ export default function Treinos() {
                             <span className="text-sm text-green-700 font-semibold">Ideal: conseguir fazer exatamente 12 repetições e não conseguir fazer a 13ª com qualidade</span>
                           </div>
                         </div>
-                  </div>
-                </div>
+                      </div>
+                    </div>
 
-                {/* Regras Fundamentais */}
+                    {/* Regras Fundamentais */}
                     <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-l-4 border-orange-400 p-6 rounded-r-lg">
                       <h3 className="font-bold text-orange-800 mb-4 flex items-center gap-2">
-                    📋 REGRAS FUNDAMENTAIS
-                  </h3>
+                        📋 REGRAS FUNDAMENTAIS
+                      </h3>
                       <p className="text-sm text-orange-700 leading-relaxed mb-4">
-                    Peço que siga exatamente como está previsto, <strong>sem acrescentar ou retirar séries nem exercícios</strong>.
-                  </p>
+                        Peço que siga exatamente como está previsto, <strong>sem acrescentar ou retirar séries nem exercícios</strong>.
+                      </p>
                       <div className="bg-orange-100 border border-orange-200 rounded-lg p-4">
                         <h4 className="font-semibold text-orange-800 mb-3">Importante:</h4>
                         <ul className="space-y-2 text-sm text-orange-700">
@@ -322,292 +285,284 @@ export default function Treinos() {
                             <span className="text-orange-600 font-bold">4.</span>
                             <span><strong>NÃO TENHA MEDO DE USAR CARGAS ALTAS</strong>, pois é através disso que conseguiremos sinalizar da melhor maneira a hipertrofia. Precisamos fazer com que cada treino seja desafiador a ponto do seu corpo <strong>TER QUE ENTENDER QUE ELE DEVE EVOLUIR</strong> para suportar a pancada do treino que você está dando nele.</span>
                           </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Observações Importantes */}
-                <div className="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-purple-400 p-6 rounded-r-lg">
-                  <h3 className="font-bold text-purple-800 mb-4 flex items-center gap-2">
-                    🔥 OBSERVAÇÕES IMPORTANTES PARA EXECUTAR EM CADA TREINO
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-purple-800 mb-2">Aquecimento</h4>
-                      <p className="text-sm text-purple-700">
-                        <strong>No primeiro exercício do treino</strong> faça <strong>2 séries iniciais EXTRAS de 30 repetições</strong> como aquecimento, com uma carga leve/moderada
-                      </p>
+                        </ul>
+                      </div>
                     </div>
 
-                    <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-purple-800 mb-2">Descanso</h4>
-                      <p className="text-sm text-purple-700">
-                        O tempo <strong>MÍNIMO DE DESCANSO</strong> entre as séries e os exercícios é de <strong>60 A 90 SEGUNDOS</strong>
-                      </p>
-                    </div>
-
-                    <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-purple-800 mb-2">Cadência</h4>
-                      <p className="text-sm text-purple-700 mb-2">
-                        Faça uma <strong>cadência controlada</strong>, nem tão lenta e nem tão rápida
-                      </p>
+                    {/* Observações Importantes */}
+                    <div className="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-purple-400 p-6 rounded-r-lg">
+                      <h3 className="font-bold text-purple-800 mb-4 flex items-center gap-2">
+                        🔥 OBSERVAÇÕES IMPORTANTES PARA EXECUTAR EM CADA TREINO
+                      </h3>
+                      
+                      <div className="space-y-4">
+                        <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-purple-800 mb-2">Aquecimento</h4>
                           <p className="text-sm text-purple-700">
-                        <strong>Exemplo:</strong> na extensora, 2 a 3 segundos na fase da subida e 2 a 3 segundos na fase da descida
-                      </p>
-                    </div>
+                            <strong>No primeiro exercício do treino</strong> faça <strong>2 séries iniciais EXTRAS de 30 repetições</strong> como aquecimento, com uma carga leve/moderada
+                          </p>
+                        </div>
 
-                    <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-purple-800 mb-2">Progressão de Carga</h4>
-                      <p className="text-sm text-purple-700 mb-2">
-                            Sempre que você ultrapassar as repetições previstas, é sinal que consegue aumentar a carga
-                      </p>
-                      <p className="text-sm text-purple-700 mb-2">
-                            Nos exercícios em que diminuem as repetições a cada série, aumente a carga conforme diminui a repetição
-                      </p>
+                        <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-purple-800 mb-2">Descanso</h4>
                           <p className="text-sm text-purple-700">
-                            <strong>Exemplo:</strong> 12/10/8 - Faz 12, descansa, faz 10 com uma carga maior, descansa, faz 8 com uma carga maior, sempre com carga <strong>MÁXIMA</strong> para cada margem de repetições
-                      </p>
+                            O tempo <strong>MÍNIMO DE DESCANSO</strong> entre as séries e os exercícios é de <strong>60 A 90 SEGUNDOS</strong>
+                          </p>
+                        </div>
+
+                        <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-purple-800 mb-2">Cadência</h4>
+                          <p className="text-sm text-purple-700 mb-2">
+                            Faça uma <strong>cadência controlada</strong>, nem tão lenta e nem tão rápida
+                          </p>
+                          <p className="text-sm text-purple-700">
+                            <strong>Exemplo:</strong> na extensora, 2 a 3 segundos na fase da subida e 2 a 3 segundos na fase da descida
+                          </p>
+                        </div>
+
+                        <div className="bg-purple-100 border border-purple-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-purple-800 mb-2">Progressão</h4>
+                          <p className="text-sm text-purple-700">
+                            <strong>SEMPRE BUSQUE PROGREDIR</strong> nas cargas a cada treino, aumentando a carga a cada série
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-          </Card>
-      </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Dias de Treino */}
         <div className="space-y-4 sm:space-y-6">
           {treino.dias.map((dia, cardIndex) => {
-          // Cores diferentes para cada card de treino
-          const cardColors = [
-            { bg: 'from-red-50 to-pink-50', border: 'border-red-200', accent: 'from-red-400 to-pink-400', dot: 'from-red-400 to-pink-400', item: 'border-red-100', emoji: '💪' },
-            { bg: 'from-blue-50 to-cyan-50', border: 'border-blue-200', accent: 'from-blue-400 to-cyan-400', dot: 'from-blue-400 to-cyan-400', item: 'border-blue-100', emoji: '🏋️' },
-            { bg: 'from-green-50 to-emerald-50', border: 'border-green-200', accent: 'from-green-400 to-emerald-400', dot: 'from-green-400 to-emerald-400', item: 'border-green-100', emoji: '💥' },
-            { bg: 'from-purple-50 to-violet-50', border: 'border-purple-200', accent: 'from-purple-400 to-violet-400', dot: 'from-purple-400 to-violet-400', item: 'border-purple-100', emoji: '🔥' },
-            { bg: 'from-orange-50 to-yellow-50', border: 'border-orange-200', accent: 'from-orange-400 to-yellow-400', dot: 'from-orange-400 to-yellow-400', item: 'border-orange-100', emoji: '⚡' },
-            { bg: 'from-indigo-50 to-blue-50', border: 'border-indigo-200', accent: 'from-indigo-400 to-blue-400', dot: 'from-indigo-400 to-blue-400', item: 'border-indigo-100', emoji: '🎯' }
-          ];
-          const colors = cardColors[cardIndex % cardColors.length];
-          
-          return (
-            <Card
-              key={dia.dia}
-              className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
-            >
-              <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${colors.accent}/20 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
-              <CardHeader className="pb-3 sm:pb-4 relative z-10 p-4 sm:p-6">
-                <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${colors.accent} shadow-lg`}>
-                      <span className="text-white text-lg sm:text-xl font-bold">{dia.dia}</span>
-                    </div>
-                    <div className="flex-1">
-                      <div 
-                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => toggleTreino(dia.dia)}
-                      >
-                        <span className="text-xl sm:text-2xl">{colors.emoji}</span>
-                        <span className="text-gray-800 font-bold text-sm sm:text-base">{dia.nome}</span>
+            // Cores diferentes para cada card de treino
+            const cardColors = [
+              { bg: 'from-red-50 to-pink-50', border: 'border-red-200', accent: 'from-red-400 to-pink-400', dot: 'from-red-400 to-pink-400', item: 'border-red-100', emoji: '💪' },
+              { bg: 'from-blue-50 to-cyan-50', border: 'border-blue-200', accent: 'from-blue-400 to-cyan-400', dot: 'from-blue-400 to-cyan-400', item: 'border-blue-100', emoji: '🏋️' },
+              { bg: 'from-green-50 to-emerald-50', border: 'border-green-200', accent: 'from-green-400 to-emerald-400', dot: 'from-green-400 to-emerald-400', item: 'border-green-100', emoji: '💥' },
+              { bg: 'from-purple-50 to-violet-50', border: 'border-purple-200', accent: 'from-purple-400 to-violet-400', dot: 'from-purple-400 to-violet-400', item: 'border-purple-100', emoji: '🔥' },
+              { bg: 'from-orange-50 to-yellow-50', border: 'border-orange-200', accent: 'from-orange-400 to-yellow-400', dot: 'from-orange-400 to-yellow-400', item: 'border-orange-100', emoji: '⚡' },
+              { bg: 'from-indigo-50 to-blue-50', border: 'border-indigo-200', accent: 'from-indigo-400 to-blue-400', dot: 'from-indigo-400 to-blue-400', item: 'border-indigo-100', emoji: '🎯' }
+            ];
+            const colors = cardColors[cardIndex % cardColors.length];
+            
+            return (
+              <Card
+                key={dia.dia}
+                className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
+              >
+                <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${colors.accent}/20 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
+                <CardHeader className="pb-3 sm:pb-4 relative z-10 p-4 sm:p-6">
+                  <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${colors.accent} shadow-lg`}>
+                        <span className="text-white text-lg sm:text-xl font-bold">{dia.dia}</span>
                       </div>
-                    <p className="text-gray-600 text-sm mt-1">{dia.grupo}</p>
-                    {(() => {
-                      const progresso = getProgressoDia(dia.dia, dia.exercicios.length);
-                      return progresso.total > 0 ? (
-                        <div className="flex items-center gap-2 mt-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${progresso.porcentagem}%` }}
-                            ></div>
-                    </div>
-                          <span className="text-xs text-gray-600 font-medium">
-                            {progresso.realizados}/{progresso.total} exercícios
-                          </span>
+                      <div className="flex-1">
+                        <div 
+                          className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => toggleTreino(dia.dia)}
+                        >
+                          <span className="text-xl sm:text-2xl">{colors.emoji}</span>
+                          <span className="text-gray-800 font-bold text-sm sm:text-base">{dia.nome}</span>
                         </div>
-                      ) : null;
-                    })()}
-                  </div>
-                </CardTitle>
-              </CardHeader>
+                        <p className="text-gray-600 text-xs sm:text-sm mt-1">{dia.grupo}</p>
+                        {(() => {
+                          const progresso = getProgressoDia(dia.dia, dia.exercicios.length);
+                          return progresso.total > 0 ? (
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto mt-2">
+                              <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${progresso.porcentagem}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-xs text-gray-600 font-medium text-center sm:text-left">
+                                {progresso.realizados}/{progresso.total} exercícios
+                              </span>
+                            </div>
+                          ) : null;
+                        })()}
+                      </div>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
                 
                 {treinoAberto === dia.dia && (
-              <CardContent className="space-y-3 relative z-10">
-                {dia.exercicios.map((exercicio, index) => {
-                  const exercicioRealizado = isExercicioRealizado(dia.dia, exercicio.nome, index);
-                  
-                  return (
-                    <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
-                        <div className="flex items-start gap-3 flex-1">
-                          <Checkbox
-                            checked={exercicioRealizado}
-                            onCheckedChange={() => toggleExercicio(dia.dia, exercicio.nome, index)}
-                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600 mt-1 flex-shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                              <h4 className="font-bold text-gray-800 leading-tight text-sm sm:text-base break-words">{exercicio.nome}</h4>
-                              {exercicioRealizado && (
-                                <span className="text-green-600 text-xs sm:text-sm font-semibold">✓ Concluído</span>
-                              )}
+                  <CardContent className="space-y-3 relative z-10">
+                    {dia.exercicios.map((exercicio, index) => {
+                      const exercicioRealizado = isExercicioRealizado(dia.dia, exercicio.nome, index);
+                      
+                      return (
+                        <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
+                          <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
+                            <div className="flex items-start gap-3 flex-1">
+                              <Checkbox
+                                checked={exercicioRealizado}
+                                onCheckedChange={() => toggleExercicio(dia.dia, exercicio.nome, index)}
+                                className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600 mt-1 flex-shrink-0"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                  <h4 className="font-bold text-gray-800 leading-tight text-sm sm:text-base break-words">{exercicio.nome}</h4>
+                                  {exercicioRealizado && (
+                                    <span className="text-green-600 text-xs sm:text-sm font-semibold">✓ Concluído</span>
+                                  )}
+                                </div>
+                                <div className="flex gap-1 sm:gap-2 flex-wrap">
+                                  <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm text-xs px-2 py-1">
+                                    📊 {exercicio.series} séries
+                                  </Badge>
+                                  <Badge variant="outline" className="border-orange-400 text-orange-700 bg-orange-50 font-semibold shadow-sm text-xs px-2 py-1">
+                                    🔄 {exercicio.repeticoes}
+                                  </Badge>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex gap-1 sm:gap-2 flex-wrap">
-                              <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm text-xs px-2 py-1">
-                                📊 {exercicio.series} séries
-                              </Badge>
-                              <Badge variant="outline" className="border-orange-400 text-orange-700 bg-orange-50 font-semibold shadow-sm text-xs px-2 py-1">
-                                🔄 {exercicio.repeticoes}
-                              </Badge>
+                            <div className="flex items-center gap-2 sm:ml-auto">
+                              {exercicio.execucao && (
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto whitespace-nowrap"
+                                    >
+                                      <Play className="w-3 h-3" />
+                                      <span className="hidden sm:inline">Ver Execução</span>
+                                      <span className="sm:hidden">Ver</span>
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="max-w-4xl">
+                                    <DialogHeader>
+                                      <DialogTitle>{exercicio.nome}</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="aspect-video">
+                                      <iframe
+                                        src={exercicio.execucao.includes('youtube.com/shorts/')
+                                          ? exercicio.execucao.replace('youtube.com/shorts/', 'youtube.com/embed/')
+                                          : exercicio.execucao.includes('youtube.com/watch?v=')
+                                          ? exercicio.execucao.replace('youtube.com/watch?v=', 'youtube.com/embed/')
+                                          : exercicio.execucao
+                                        }
+                                        className="w-full h-full rounded-lg"
+                                        allowFullScreen
+                                        title={exercicio.nome}
+                                      />
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
+                              )}
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 sm:ml-auto">
-                      {exercicio.execucao && (
-                            <Dialog>
-                              <DialogTrigger asChild>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                                  onClick={(e) => e.stopPropagation()}
-                          className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto whitespace-nowrap"
-                        >
-                          <Play className="w-3 h-3" />
-                          <span className="hidden sm:inline">Ver Execução</span>
-                          <span className="sm:hidden">Ver</span>
-                        </Button>
-                              </DialogTrigger>
-                              <DialogContent className="max-w-4xl">
-                                <DialogHeader>
-                                  <DialogTitle>{exercicio.nome}</DialogTitle>
-                                </DialogHeader>
-                                <div className="aspect-video">
-                                  <iframe
-                                    src={exercicio.execucao.includes('youtube.com/shorts/')
-                                      ? exercicio.execucao.replace('youtube.com/shorts/', 'youtube.com/embed/')
-                                      : exercicio.execucao.includes('youtube.com/watch?v=')
-                                      ? exercicio.execucao.replace('youtube.com/watch?v=', 'youtube.com/embed/')
-                                      : exercicio.execucao
-                                    }
-                                    className="w-full h-full rounded-lg"
-                                    allowFullScreen
-                                    title={exercicio.nome}
-                                  />
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                      )}
-                    </div>
-                    </div>
-                  </div>
-                  );
-                })}
-              </CardContent>
+                      );
+                    })}
+                  </CardContent>
                 )}
-            </Card>
-          );
-        })}
-      </div>
+              </Card>
+            );
+          })}
+        </div>
 
-        {/* Informações Adicionais */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Dicas para o Treino */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+        {/* Dicas para o Treino */}
+        <Card className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 border-slate-700/50 text-white shadow-2xl">
           <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
-              <span className="text-2xl">💡</span>
-            </div>
-                Dicas para o Treino
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
+                <Trophy className="w-5 h-5 text-white" />
+              </div>
+              Dicas para o Treino
             </CardTitle>
           </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Sempre faça aquecimento antes do treino</span>
-            </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Mantenha a execução correta dos exercícios</span>
-            </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Descanse de 48-72h entre treinos do mesmo grupo muscular</span>
-            </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Hidrate-se durante o treino</span>
-            </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Progrida gradualmente nas cargas</span>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <h4 className="font-semibold text-yellow-400 mb-2">💪 Progressão de Cargas</h4>
+                <p className="text-sm text-gray-300">
+                  Sempre busque aumentar a carga a cada treino, mesmo que seja apenas 2,5kg. A progressão constante é fundamental para o crescimento muscular.
+                </p>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                <span className="text-gray-300">Sempre busque chegar na falha muscular</span>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <h4 className="font-semibold text-yellow-400 mb-2">⏰ Tempo de Descanso</h4>
+                <p className="text-sm text-gray-300">
+                  Respeite os intervalos de 60-90 segundos entre as séries. Isso garante a recuperação adequada para manter a intensidade.
+                </p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <h4 className="font-semibold text-yellow-400 mb-2">🎯 Técnica Primeiro</h4>
+                <p className="text-sm text-gray-300">
+                  Priorize sempre a execução correta antes de aumentar a carga. Uma boa técnica é mais importante que peso excessivo.
+                </p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <h4 className="font-semibold text-yellow-400 mb-2">🔥 Intensidade</h4>
+                <p className="text-sm text-gray-300">
+                  Dê o máximo em cada série, buscando a falha muscular. A intensidade é o que realmente importa para o crescimento.
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Cardios */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+        <Card className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 border-slate-700/50 text-white shadow-2xl">
           <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-red-400 to-pink-500">
-              <span className="text-2xl">❤️</span>
-                </div>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <div className="p-2 rounded-lg bg-gradient-to-r from-red-400 to-pink-500">
+                <Flame className="w-5 h-5 text-white" />
+              </div>
               Cardios
             </CardTitle>
           </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">▶️ APÓS O TREINO:</span>
-      </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 01:</span>
-                  <span className="text-gray-300"> 20 minutos de escada ou de caminhada rápida na esteira com a máxima inclinação que conseguir (sempre acima de 4º graus de inclinação), sem correr.</span>
-            </div>
-      </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 02 (para dias mais corridos):</span>
-                  <span className="text-gray-300"> HIIT de 10 minutos na esteira ou na bike (1 minuto numa velocidade leve para 1 minuto na máxima velocidade)</span>
-              </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 03:</span>
-                  <span className="text-gray-300"> 30 minutos de bike, elíptico ou caminhada rápida na esteira ou na rua (sem inclinação).</span>
-            </div>
+          <CardContent className="space-y-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <h4 className="font-semibold text-red-400 mb-3">🏃‍♂️ Opções de Cardio Pós-Treino</h4>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-sm text-gray-300 font-medium">Esteira (Caminhada Inclinada)</p>
+                    <p className="text-xs text-gray-400">15-20 minutos, inclinação 8-12%, velocidade 4-6 km/h</p>
+                  </div>
                 </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div className="space-y-2">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <span className="text-gray-300 font-semibold">⚠️ Não faça o cardio antes do treino.</span>
-              </div>
-                  <div>
-                    <span className="text-gray-300 font-semibold">⚠️ Sempre mantenha uma intensidade a ponto de suar e da respiração se manter ofegante.</span>
+                    <p className="text-sm text-gray-300 font-medium">Bicicleta Ergométrica</p>
+                    <p className="text-xs text-gray-400">15-20 minutos, resistência moderada, manter 70-80% da FC máxima</p>
+                  </div>
                 </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                   <div>
-                    <span className="text-gray-300 font-semibold">⚠️ Caso não consiga fazer após o treino, pode fazer em um outro horário do dia, ou até mesmo em um dia sem treino.</span>
+                    <p className="text-sm text-gray-300 font-medium">Elíptico</p>
+                    <p className="text-xs text-gray-400">15-20 minutos, resistência moderada, movimento fluido</p>
+                  </div>
+                </div>
               </div>
+            </div>
+            
+            <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <p className="text-sm text-red-300 font-medium">⚠️ Importante</p>
+                  <p className="text-xs text-red-200 mt-1">
+                    Faça o cardio APÓS o treino de musculação, nunca antes. 
+                    Mantenha a intensidade moderada para não comprometer a recuperação muscular.
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
-              </div>
-            </div>
-            
+      </div>
+      
       {/* Modal de Personalização */}
       <TrainingPersonalizationModal
         isOpen={showPersonalizationModal}
