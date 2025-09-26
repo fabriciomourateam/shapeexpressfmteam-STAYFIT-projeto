@@ -48,6 +48,18 @@ export default function Treinos() {
     if (profile && isTrainingPersonalized) {
       setIsLoadingContent(false);
     }
+    // Pequeno delay para garantir que a personalização foi aplicada
+    const timer = setTimeout(() => setIsLoadingContent(false), 100);
+    return () => clearTimeout(timer);
+  }, [profile, isTrainingPersonalized]);
+
+  // Verificação adicional para não mostrar conteúdo padrão durante transições
+  useEffect(() => {
+    // Quando não está personalizado mas há profile carregado, aguardar um pouco
+    if (profile && !isTrainingPersonalized) {
+      const timer = setTimeout(() => setIsLoadingContent(false), 200);
+      return () => clearTimeout(timer);
+    }
   }, [profile, isTrainingPersonalized]);
 
   // Lógica de treinos baseada no perfil personalizado
@@ -123,6 +135,12 @@ export default function Treinos() {
   if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
     return (
       <div 
+=======
+  // Verificação de segurança para evitar erro quando treino não existir ou ainda carregando
+  if (!treino || isLoadingContent || (isTrainingPersonalized && (!profile?.sexo || !profile?.frequencia_treino))) {
+    return (
+      <div 
+>>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
         className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
         style={{
           background: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%)`
@@ -190,8 +208,6 @@ export default function Treinos() {
     return colors[(dia - 1) % colors.length];
   };
 
-
-
   return (
     <div 
       className="min-h-screen text-white p-6 pb-6 lg:pb-6 relative"
@@ -220,11 +236,11 @@ export default function Treinos() {
         }}
       ></div>
       
-       <div className="relative z-10 space-y-6">
-         {/* Header com título centralizado e toggle de gênero */}
-         <div className="text-center space-y-4 relative">
-           {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
-           {!isTrainingPersonalized && (
+      <div className="relative z-10 space-y-6">
+        {/* Header com título centralizado e toggle de gênero */}
+        <div className="text-center space-y-4 relative">
+          {/* Toggle de Gênero - Só aparece se não estiver personalizado */}
+          {!isTrainingPersonalized && (
         <div className="absolute top-0 right-0 sm:right-0 max-sm:relative max-sm:flex max-sm:justify-center max-sm:mb-4">
           <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 gap-1 max-sm:scale-90">
             <Toggle
@@ -264,22 +280,23 @@ export default function Treinos() {
          <div className="flex justify-center mb-6">
            <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 w-full max-w-2xl">
         <div className="flex items-center justify-between">
-               {/* Lado Esquerdo - Título e Frequência */}
-               <div className="flex items-center gap-4">
-                 <div className="p-3 bg-white/20 rounded-xl">
-                   <Dumbbell className="w-8 h-8 text-white" />
-                 </div>
+              {/* Lado Esquerdo - Título e Frequência */}
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/20 rounded-xl">
+                  <Dumbbell className="w-8 h-8 text-white" />
+                </div>
           <div>
-                   <h2 className="text-2xl font-bold text-white">
-                     {treino.frequencia}
-                   </h2>
-                   {(treino as any).observacao && (
-                     <p className="text-white/80 text-xs mt-1">
-                       {(treino as any).observacao}
-                     </p>
-                   )}
+                  <h2 className="text-2xl font-bold text-white">
+                    {treino.frequencia}
+                  </h2>
+                  {(treino as any).observacao && (
+                    <p className="text-white/80 text-xs mt-1">
+                      {(treino as any).observacao}
+                    </p>
+                  )}
           </div>
-               </div>
+              </div>
+>>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
 
                {/* Lado Direito - Tipo e Duração */}
                <div className="flex flex-col items-end gap-2">
@@ -486,6 +503,44 @@ export default function Treinos() {
                           ) : null;
                         })()}
                     </div>
+=======
+            <Card
+              key={dia.dia}
+              className={`bg-gradient-to-br ${colors.bg} ${colors.border} text-gray-900 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 relative overflow-hidden`}
+            >
+              <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${colors.accent}/20 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10`}></div>
+              <CardHeader className="pb-3 sm:pb-4 relative z-10 p-4 sm:p-6">
+                <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 sm:p-3 rounded-xl bg-gradient-to-br ${colors.accent} shadow-lg`}>
+                      <span className="text-white text-lg sm:text-xl font-bold">{dia.dia}</span>
+                    </div>
+                    <div className="flex-1">
+                      <div 
+                        className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => toggleTreino(dia.dia)}
+                      >
+                        <span className="text-xl sm:text-2xl">{colors.emoji}</span>
+                        <span className="text-gray-800 font-bold text-sm sm:text-base">{dia.nome}</span>
+                      </div>
+                    <p className="text-gray-600 text-sm mt-1">{dia.grupo}</p>
+                    {(() => {
+                      const progresso = getProgressoDia(dia.dia, dia.exercicios.length);
+                      return progresso.total > 0 ? (
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex-1 bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${progresso.porcentagem}%` }}
+                            ></div>
+                    </div>
+                          <span className="text-xs text-gray-600 font-medium">
+                            {progresso.realizados}/{progresso.total} exercícios
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
+>>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -555,6 +610,71 @@ export default function Treinos() {
                                     </div>
                                   </DialogContent>
                                 </Dialog>
+=======
+                {dia.exercicios.map((exercicio, index) => {
+                  const exercicioRealizado = isExercicioRealizado(dia.dia, exercicio.nome, index);
+                  
+                  return (
+                    <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 border ${colors.item} shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90 ${exercicioRealizado ? 'ring-2 ring-green-400 bg-green-50' : ''}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
+                        <div className="flex items-start gap-3 flex-1">
+                          <Checkbox
+                            checked={exercicioRealizado}
+                            onCheckedChange={() => toggleExercicio(dia.dia, exercicio.nome, index)}
+                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600 mt-1 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                              <h4 className="font-bold text-gray-800 leading-tight text-sm sm:text-base break-words">{exercicio.nome}</h4>
+                              {exercicioRealizado && (
+                                <span className="text-green-600 text-xs sm:text-sm font-semibold">✓ Concluído</span>
+                              )}
+                            </div>
+                            <div className="flex gap-1 sm:gap-2 flex-wrap">
+                              <Badge variant="outline" className="border-yellow-400 text-yellow-700 bg-yellow-50 font-semibold shadow-sm text-xs px-2 py-1">
+                                📊 {exercicio.series} séries
+                              </Badge>
+                              <Badge variant="outline" className="border-orange-400 text-orange-700 bg-orange-50 font-semibold shadow-sm text-xs px-2 py-1">
+                                🔄 {exercicio.repeticoes}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 sm:ml-auto">
+                      {exercicio.execucao && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                                  onClick={(e) => e.stopPropagation()}
+                          className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 flex items-center gap-1 text-xs px-2 py-1 h-auto whitespace-nowrap"
+                        >
+                          <Play className="w-3 h-3" />
+                          <span className="hidden sm:inline">Ver Execução</span>
+                          <span className="sm:hidden">Ver</span>
+                        </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl">
+                                <DialogHeader>
+                                  <DialogTitle>{exercicio.nome}</DialogTitle>
+                                </DialogHeader>
+                                <div className="aspect-video">
+                                  <iframe
+                                    src={exercicio.execucao.includes('youtube.com/shorts/')
+                                      ? exercicio.execucao.replace('youtube.com/shorts/', 'youtube.com/embed/')
+                                      : exercicio.execucao.includes('youtube.com/watch?v=')
+                                      ? exercicio.execucao.replace('youtube.com/watch?v=', 'youtube.com/embed/')
+                                      : exercicio.execucao
+                                    }
+                                    className="w-full h-full rounded-lg"
+                                    allowFullScreen
+                                    title={exercicio.nome}
+                                  />
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+>>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
                       )}
                     </div>
                     </div>
@@ -568,12 +688,102 @@ export default function Treinos() {
         })}
       </div>
 
-        {/* Dicas para o Treino */}
-        <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+        {/* Informações Adicionais */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Dicas para o Treino */}
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
-              <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
-                <Trophy className="w-5 h-5 text-white" />
+              <CardTitle className="flex items-center gap-2 text-white">
+                <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
+              <span className="text-2xl">💡</span>
+            </div>
+                Dicas para o Treino
+            </CardTitle>
+          </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Sempre faça aquecimento antes do treino</span>
+            </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Mantenha a execução correta dos exercícios</span>
+            </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Descanse de 48-72h entre treinos do mesmo grupo muscular</span>
+            </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Hidrate-se durante o treino</span>
+            </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Progrida gradualmente nas cargas</span>
+              </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                <span className="text-gray-300">Sempre busque chegar na falha muscular</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cardios */}
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+          <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <div className="p-2 rounded-lg bg-gradient-to-r from-red-400 to-pink-500">
+              <span className="text-2xl">❤️</span>
+                </div>
+              Cardios
+            </CardTitle>
+          </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <span className="text-gray-300 font-semibold">▶️ APÓS O TREINO:</span>
+      </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 01:</span>
+                  <span className="text-gray-300"> 20 minutos de escada ou de caminhada rápida na esteira com a máxima inclinação que conseguir (sempre acima de 4º graus de inclinação), sem correr.</span>
+            </div>
+      </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 02 (para dias mais corridos):</span>
+                  <span className="text-gray-300"> HIIT de 10 minutos na esteira ou na bike (1 minuto numa velocidade leve para 1 minuto na máxima velocidade)</span>
+              </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 03:</span>
+                  <span className="text-gray-300"> 30 minutos de bike, elíptico ou caminhada rápida na esteira ou na rua (sem inclinação).</span>
+            </div>
+                </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="space-y-2">
+                  <div>
+                    <span className="text-gray-300 font-semibold">⚠️ Não faça o cardio antes do treino.</span>
+              </div>
+                  <div>
+                    <span className="text-gray-300 font-semibold">⚠️ Sempre mantenha uma intensidade a ponto de suar e da respiração se manter ofegante.</span>
+                </div>
+                  <div>
+                    <span className="text-gray-300 font-semibold">⚠️ Caso não consiga fazer após o treino, pode fazer em um outro horário do dia, ou até mesmo em um dia sem treino.</span>
+              </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+              </div>
+>>>>>>> 2a77055f1eb7c4cd6ffa60c18312e820db632099
             </div>
               Dicas para o Treino
             </CardTitle>

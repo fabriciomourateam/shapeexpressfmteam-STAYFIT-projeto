@@ -52,7 +52,7 @@ export function PWAInstallBanner() {
     return null;
   }
 
-  // Para teste - sempre mostrar se for instalável
+  // Se foi dispensado, não mostrar
   if (isDismissed) {
     return null;
   }
