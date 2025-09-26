@@ -13,6 +13,7 @@ import {
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/PWAInstallBanner';
+import { usePWA } from '@/hooks/use-pwa';
 
 interface LayoutProps {
   children: ReactNode;
@@ -20,6 +21,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { user, loading, signOut } = useAuth();
+  const { isInstallable, isInstalled, installApp } = usePWA();
 
   if (loading) {
     return (
@@ -170,14 +172,27 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={signOut}
-              className="text-gray-400 hover:text-white"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+                <div className="flex items-center gap-2">
+                  {/* Botão de teste PWA - remover depois */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={installApp}
+                    className="text-yellow-400 hover:text-yellow-300 text-xs"
+                    disabled={!isInstallable}
+                  >
+                    📱 {isInstallable ? 'Instalar App' : isInstalled ? 'Já Instalado' : 'Não Disponível'}
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={signOut}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
           </div>
         </div>
       </header>

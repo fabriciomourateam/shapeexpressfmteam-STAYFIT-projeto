@@ -9,8 +9,13 @@ export function PWAInstallBanner() {
   const { isInstallable, isInstalled, installApp } = usePWA();
   const [isDismissed, setIsDismissed] = useState(false);
 
-  // Não mostrar se já instalado, não é instalável ou foi dispensado
-  if (isInstalled || !isInstallable || isDismissed) {
+  // Para teste: sempre mostrar o banner (comentar depois)
+  // if (isInstalled || !isInstallable || isDismissed) {
+  //   return null;
+  // }
+
+  // Versão de teste - sempre mostrar
+  if (isDismissed) {
     return null;
   }
 
