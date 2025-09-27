@@ -273,14 +273,14 @@ export default function Treinos() {
          {/* Card Superior de Informações */}
          <div className="flex justify-center mb-6">
            <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 w-full max-w-2xl">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               {/* Lado Esquerdo - Título e Frequência */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white/20 rounded-xl">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="p-3 bg-white/20 rounded-xl flex-shrink-0">
                   <Dumbbell className="w-8 h-8 text-white" />
                 </div>
-          <div>
-                  <h2 className="text-2xl font-bold text-white">
+          <div className="min-w-0 flex-1">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     {treino.frequencia}
                   </h2>
                   {(treino as any).observacao && (
@@ -292,12 +292,12 @@ export default function Treinos() {
               </div>
 
                {/* Lado Direito - Tipo e Duração */}
-               <div className="flex flex-col items-end gap-2">
-                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+               <div className="flex flex-col items-end gap-2 min-w-0">
+                 <Badge variant="secondary" className="bg-white/20 text-white border-white/30 whitespace-nowrap">
                    {getTipoIcon(treino.tipo)}
                    <span className="ml-1 capitalize">{treino.tipo === 'academia' ? 'Academia' : 'Casa'}</span>
             </Badge>
-                 <div className="flex items-center gap-1 text-white/90 text-sm">
+                 <div className="flex items-center gap-1 text-white/90 text-sm whitespace-nowrap">
                    <Clock className="w-4 h-4" />
                    <span>{treino.duracao}</span>
                  </div>
