@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProgressDashboard } from '@/components/ProgressDashboard';
+import { NotificationSettings } from '@/components/NotificationSettings';
 
 interface Profile {
   nome: string;
@@ -428,6 +429,9 @@ export default function Perfil() {
 
         {/* Progress Dashboard */}
         <ProgressDashboard />
+
+        {/* Notification Settings */}
+        <NotificationSettings />
 
         {/* Two-column layout for larger screens */}
         <div className="grid gap-4 md:grid-cols-2">

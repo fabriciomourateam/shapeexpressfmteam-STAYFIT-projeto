@@ -631,31 +631,29 @@ export default function Treinos() {
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">▶️ APÓS O TREINO:</span>
-      </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 01:</span>
-                  <span className="text-gray-300"> 20 minutos de escada ou de caminhada rápida na esteira com a máxima inclinação que conseguir (sempre acima de 4º graus de inclinação), sem correr.</span>
-            </div>
-      </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 02 (para dias mais corridos):</span>
-                  <span className="text-gray-300"> HIIT de 10 minutos na esteira ou na bike (1 minuto numa velocidade leve para 1 minuto na máxima velocidade)</span>
-              </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                <div>
-                  <span className="text-gray-300 font-semibold">📍 OPÇÃO 03:</span>
-                  <span className="text-gray-300"> 30 minutos de bike, elíptico ou caminhada rápida na esteira ou na rua (sem inclinação).</span>
-            </div>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-gray-300 font-semibold">▶️ APÓS O TREINO:</span>
+                  </div>
+                  
+                  <div className="space-y-2 pl-4">
+                    <div>
+                      <span className="text-gray-300 font-semibold">📍 OPÇÃO 01:</span>
+                      <span className="text-gray-300"> 20 minutos de escada ou de caminhada rápida na esteira com a máxima inclinação que conseguir (sempre acima de 4º graus de inclinação), sem correr.</span>
+                    </div>
+                    
+                    <div>
+                      <span className="text-gray-300 font-semibold">📍 OPÇÃO 02 (para dias mais corridos):</span>
+                      <span className="text-gray-300"> HIIT de 10 minutos na esteira ou na bike (1 minuto numa velocidade leve para 1 minuto na máxima velocidade)</span>
+                    </div>
+                    
+                    <div>
+                      <span className="text-gray-300 font-semibold">📍 OPÇÃO 03:</span>
+                      <span className="text-gray-300"> 30 minutos de bike, elíptico ou caminhada rápida na esteira ou na rua (sem inclinação).</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-400 to-pink-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="space-y-2">

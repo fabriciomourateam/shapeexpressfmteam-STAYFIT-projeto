@@ -6,6 +6,15 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
 
+# Forçar cache busting para SPA
+RewriteRule ^dietas$ /index.html [L]
+RewriteRule ^treinos$ /index.html [L]
+RewriteRule ^suporte$ /index.html [L]
+RewriteRule ^perfil$ /index.html [L]
+RewriteRule ^desafio$ /index.html [L]
+RewriteRule ^ranking$ /index.html [L]
+RewriteRule ^welcome$ /index.html [L]
+
 # Cache static assets
 <IfModule mod_expires.c>
     ExpiresActive on
@@ -16,4 +25,11 @@ RewriteRule . /index.html [L]
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# Headers para SPA
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
 </IfModule>

@@ -3,3 +3,12 @@
 
 # Fallback para todas as rotas
 /index.html    /index.html   200
+
+# Forçar cache busting para SPA
+/dietas    /index.html   200
+/treinos    /index.html   200
+/suporte    /index.html   200
+/perfil    /index.html   200
+/desafio    /index.html   200
+/ranking    /index.html   200
+/welcome    /index.html   200
