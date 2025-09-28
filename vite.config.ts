@@ -8,8 +8,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    // Configuração para SPA - redirecionar todas as rotas para index.html
-    historyApiFallback: true,
   },
   build: {
     // Configuração para produção
@@ -19,8 +17,38 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  preview: {
+    // Configuração para preview - redirecionar todas as rotas para index.html
+    historyApiFallback: true,
+  },
   plugins: [
     react(),
+    // Plugin SPA para redirecionar todas as rotas para index.html
+    {
+      name: 'spa-fallback',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          // Excluir recursos do Vite e arquivos estáticos
+          if (
+            req.url?.startsWith('/@vite') ||
+            req.url?.startsWith('/@react-refresh') ||
+            req.url?.startsWith('/@fs') ||
+            req.url?.startsWith('/node_modules') ||
+            req.url?.includes('.') ||
+            req.url?.startsWith('/api') ||
+            req.url?.startsWith('/src') ||
+            req.url === '/'
+          ) {
+            next();
+            return;
+          }
+          
+          // Para rotas SPA, redirecionar para index.html
+          req.url = '/';
+          next();
+        });
+      }
+    },
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
