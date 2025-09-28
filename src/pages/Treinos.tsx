@@ -24,43 +24,26 @@ export default function Treinos() {
 
   // Estados de loading para evitar flash do conteúdo padrão
   const [isLoadingContent, setIsLoadingContent] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Inicialização única para evitar múltiplos re-renders
+  useEffect(() => {
+    if (!isInitialized) {
+      const initTimer = setTimeout(() => {
+        setIsInitialized(true);
+        setIsLoadingContent(false);
+      }, 200);
+      return () => clearTimeout(initTimer);
+    }
+  }, [isInitialized]);
 
   // Verificar se precisa mostrar o modal de personalização
   useEffect(() => {
-    if (profile && !isTrainingPersonalized) {
+    if (profile && !isTrainingPersonalized && isInitialized) {
       // Não abrir automaticamente, deixar o usuário clicar no botão
       // setShowPersonalizationModal(true);
     }
-    // Pequeno delay para garantir que a personalização foi aplicada
-    const timer = setTimeout(() => setIsLoadingContent(false), 100);
-    return () => clearTimeout(timer);
-  }, [profile, isTrainingPersonalized]);
-
-  // Verificação adicional para não mostrar conteúdo padrão durante transições
-  useEffect(() => {
-    // Quando não está personalizado mas há profile carregado, aguardar um pouco
-    if (profile && !isTrainingPersonalized) {
-      const timer = setTimeout(() => setIsLoadingContent(false), 200);
-      return () => clearTimeout(timer);
-    }
-    
-    // Quando está personalizado, liberar imediatamente
-    if (profile && isTrainingPersonalized) {
-      setIsLoadingContent(false);
-    }
-    // Pequeno delay para garantir que a personalização foi aplicada
-    const timer = setTimeout(() => setIsLoadingContent(false), 100);
-    return () => clearTimeout(timer);
-  }, [profile, isTrainingPersonalized]);
-
-  // Verificação adicional para não mostrar conteúdo padrão durante transições
-  useEffect(() => {
-    // Quando não está personalizado mas há profile carregado, aguardar um pouco
-    if (profile && !isTrainingPersonalized) {
-      const timer = setTimeout(() => setIsLoadingContent(false), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [profile, isTrainingPersonalized]);
+  }, [profile, isTrainingPersonalized, isInitialized]);
 
   // Lógica de treinos baseada no perfil personalizado
   const treinosDetalhados = isTrainingPersonalized && profile?.sexo && profile?.frequencia_treino

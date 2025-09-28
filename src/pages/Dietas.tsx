@@ -672,16 +672,27 @@ export default function Dietas() {
 
   // Estados de loading para evitar flash do conteúdo padrão
   const [isLoadingContent, setIsLoadingContent] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Lógica de planos baseada no perfil personalizado
   const planosDetalhados = isPersonalized && profile?.sexo 
     ? obterPlanosPorGenero(profile.sexo as 'masculino' | 'feminino')
     : obterPlanosPorGenero(generoSelecionado);
 
+  // Inicialização única para evitar múltiplos re-renders
+  useEffect(() => {
+    if (!isInitialized) {
+      const initTimer = setTimeout(() => {
+        setIsInitialized(true);
+        setIsLoadingContent(false);
+      }, 200);
+      return () => clearTimeout(initTimer);
+    }
+  }, [isInitialized]);
 
   // Selecionar plano recomendado automaticamente se personalizado
   useEffect(() => {
-    if (isPersonalized && profile) {
+    if (isPersonalized && profile && isInitialized) {
       const planoRecomendado = getRecommendedDietPlan(profile);
       if (planoRecomendado) {
         // Remover o prefixo do gênero para manter consistência com a interface
@@ -689,24 +700,8 @@ export default function Dietas() {
         setPlanoSelecionado(planoLimpo);
       }
     }
-    // Pequeno delay para garantir que a personalização foi aplicada
-    const timer = setTimeout(() => setIsLoadingContent(false), 100);
-    return () => clearTimeout(timer);
-  }, [isPersonalized, profile]);
+  }, [isPersonalized, profile, isInitialized]);
 
-  // Verificação adicional para não mostrar conteúdo padrão durante transições
-  useEffect(() => {
-    // Quando não está personalizado mas há profile carregado, aguardar um pouco
-    if (profile && !isPersonalized) {
-      const timer = setTimeout(() => setIsLoadingContent(false), 200);
-      return () => clearTimeout(timer);
-    }
-    
-    // Quando está personalizado, liberar imediatamente
-    if (profile && isPersonalized) {
-      setIsLoadingContent(false);
-    }
-  }, [profile, isPersonalized]);
 
   const plano = planosDetalhados[planoSelecionado];
 

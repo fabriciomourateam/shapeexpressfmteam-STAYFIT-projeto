@@ -611,60 +611,6 @@ export function ProgressDashboard() {
         </Card>
       </div>
 
-      {/* Footer Stats Mobile-Optimized */}
-      <div className="px-2">
-        <Card className="bg-gray-50 border-gray-200 rounded-2xl shadow-sm">
-          <CardContent className="p-4 sm:p-6">
-            <div className="space-y-4">
-              {/* Trend */}
-              <div className="flex items-center justify-center gap-3 p-3 bg-white rounded-xl">
-                {trend > 0 ? (
-                  <>
-                    <div className="p-2 rounded-full bg-green-100">
-                      <TrendingUp className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span className="text-sm font-medium text-green-700">
-                      Crescimento de {trend}% na segunda metade
-                    </span>
-                  </>
-                ) : trend < 0 ? (
-                  <>
-                    <div className="p-2 rounded-full bg-red-100">
-                      <TrendingUp className="h-4 w-4 text-red-600 rotate-180" />
-                    </div>
-                    <span className="text-sm font-medium text-red-700">
-                      Queda de {Math.abs(trend)}% na segunda metade
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <div className="p-2 rounded-full bg-gray-100">
-                      <Calendar className="h-4 w-4 text-gray-600" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">
-                      Performance estável
-                    </span>
-                  </>
-                )}
-              </div>
-
-              {/* Additional Stats */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3" />
-                  <span>Dados atualizados em tempo real</span>
-                </div>
-                {bestDay && (
-                  <div className="flex items-center gap-2">
-                    <Trophy className="h-3 w-3 text-yellow-500" />
-                    <span>Melhor dia: Dia {bestDay.day} ({bestDay.points} pts)</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

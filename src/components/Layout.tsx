@@ -14,6 +14,7 @@ import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/PWAInstallBanner';
 import { usePWA } from '@/hooks/use-pwa';
+import { PageTransition } from '@/components/PageTransition';
 
 interface LayoutProps {
   children: ReactNode;
@@ -199,7 +200,9 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Conteúdo principal */}
       <main className="flex-1 lg:ml-80 px-4 py-6 pb-24 lg:pb-6">
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </main>
 
       {/* Bottom Navigation - Mobile */}
