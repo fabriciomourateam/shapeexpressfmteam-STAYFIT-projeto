@@ -13,6 +13,7 @@ import {
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/PWAInstallBanner';
+import { PWAInstallGuide } from '@/components/PWAInstallGuide';
 import { usePWA } from '@/hooks/use-pwa';
 import { PageTransition } from '@/components/PageTransition';
 
@@ -174,16 +175,12 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
                 <div className="flex items-center gap-2">
-                  {/* Botão de teste PWA - remover depois */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={installApp}
-                    className="text-yellow-400 hover:text-yellow-300 text-xs"
-                    disabled={!isInstallable}
-                  >
-                    📱 {isInstallable ? 'Instalar App' : isInstalled ? 'Já Instalado' : 'Não Disponível'}
-                  </Button>
+                  {/* Guia de instalação PWA */}
+                  <PWAInstallGuide
+                    isInstallable={isInstallable}
+                    isInstalled={isInstalled}
+                    onInstall={installApp}
+                  />
                   
                   <Button
                     variant="ghost"
