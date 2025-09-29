@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Smartphone, Apple, Share, Plus, MoreHorizontal } from 'lucide-react';
+import { Smartphone, Apple, Share, Plus, MoreHorizontal, X } from 'lucide-react';
 
 interface PWAInstallGuideProps {
   isInstallable: boolean;
@@ -53,11 +53,20 @@ export function PWAInstallGuide({ isInstallable, isInstalled, onInstall }: PWAIn
           📱 Como Instalar
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md mx-auto">
-        <DialogHeader>
-          <DialogTitle className="text-center text-lg font-bold text-gray-900">
+      <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="relative">
+          <DialogTitle className="text-center text-lg font-bold text-gray-900 pr-8">
             Como Instalar o App
           </DialogTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsOpen(false)}
+            className="absolute top-0 right-0 h-8 w-8 p-0 hover:bg-gray-100"
+            aria-label="Fechar modal"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -184,6 +193,16 @@ export function PWAInstallGuide({ isInstallable, isInstalled, onInstall }: PWAIn
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Botão de fechar */}
+          <div className="pt-4 border-t border-gray-200">
+            <Button
+              onClick={() => setIsOpen(false)}
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+            >
+              Entendi, Fechar
+            </Button>
           </div>
         </div>
       </DialogContent>
