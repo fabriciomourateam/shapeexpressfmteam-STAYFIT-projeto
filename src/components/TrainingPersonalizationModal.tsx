@@ -136,7 +136,7 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md bg-white text-gray-900 shadow-2xl rounded-lg border-0">
+      <Card className="w-full max-w-md max-h-[90vh] bg-white text-gray-900 shadow-2xl rounded-lg border-0 overflow-hidden flex flex-col">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-4">
             <Dumbbell className="w-8 h-8 text-white" />
@@ -147,7 +147,7 @@ export function TrainingPersonalizationModal({ isOpen, onClose, onComplete }: Tr
           </CardDescription>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="flex-1 overflow-y-auto">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Sexo */}
             <div className="space-y-3">
